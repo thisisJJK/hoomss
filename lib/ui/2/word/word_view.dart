@@ -6,6 +6,8 @@ import 'package:hoomss/ui/2/quiz/quiz_view.dart';
 import 'package:hoomss/ui/2/word/widget/mode_card.dart';
 
 enum ModeType {
+  bomool(toKo: '보물 단어장'),
+
   wrong(toKo: '흘린 단어장'),
   basic(toKo: '기초 / 중등'),
   koreaTest(toKo: '수능'),
@@ -29,11 +31,11 @@ class WordView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ModeCard(
-              title: '보물 단어장',
+              title: ModeType.bomool.toKo,
               number: 1000,
-              icon: FeatherIcons.plus,
+              icon: FeatherIcons.list,
               onTap: () {
-                Get.to(() => const BomoolView());
+                Get.to(() => BomoolView());
               },
             ),
             const SizedBox(height: 12),

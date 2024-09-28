@@ -16,7 +16,7 @@ class WordCard extends StatelessWidget {
       ),
       padding: const EdgeInsets.only(left: 10, right: 10),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Align(
@@ -36,7 +36,6 @@ class WordCard extends StatelessWidget {
               fontSize: 30,
             ),
           ),
-          const SizedBox(height: 5),
           AutoSizeText(
             meaning,
             minFontSize: 10,
@@ -44,7 +43,7 @@ class WordCard extends StatelessWidget {
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: 16,
+              fontSize: 20,
             ),
           ),
         ],

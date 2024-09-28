@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoomss/ui/splash/splash_screen.dart';
 
-void main() {
+void main() async {
   runApp(const GetMaterialApp(
     home: MyApp(),
   ));
