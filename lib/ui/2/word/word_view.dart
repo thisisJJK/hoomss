@@ -8,8 +8,7 @@ import 'package:hoomss/ui/2/word/widget/mode_card.dart';
 enum ModeType {
   bomool(toKo: '보물 단어장'),
 
-  wrong(toKo: '흘린 단어장'),
-  basic(toKo: '기초 / 중등'),
+  basic(toKo: '기초'),
   koreaTest(toKo: '수능'),
   toeic(toKo: '토익');
 
@@ -26,55 +25,58 @@ class WordView extends StatelessWidget {
       appBar: appbar(),
       body: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ModeCard(
-              title: ModeType.bomool.toKo,
-              number: 1000,
-              icon: FeatherIcons.list,
-              onTap: () {
-                Get.to(() => BomoolView());
-              },
-            ),
-            const SizedBox(height: 12),
-            ModeCard(
-              title: ModeType.wrong.toKo,
-              number: 1000,
-              icon: FeatherIcons.circle,
-              onTap: () {
-                Get.to(() => QuizView(mode: ModeType.wrong.toKo));
-              },
-            ),
-            const SizedBox(height: 12),
-            ModeCard(
-              title: ModeType.basic.toKo,
-              number: 1000,
-              icon: FeatherIcons.circle,
-              onTap: () {
-                Get.to(() => QuizView(mode: ModeType.basic.toKo));
-              },
-            ),
-            const SizedBox(height: 12),
-            ModeCard(
-              title: ModeType.koreaTest.toKo,
-              number: 1000,
-              icon: FeatherIcons.circle,
-              onTap: () {
-                Get.to(() => QuizView(mode: ModeType.koreaTest.toKo));
-              },
-            ),
-            const SizedBox(height: 12),
-            ModeCard(
-              title: ModeType.toeic.toKo,
-              number: 1000,
-              icon: FeatherIcons.circle,
-              onTap: () {
-                Get.to(() => QuizView(mode: ModeType.toeic.toKo));
-              },
-            ),
-          ],
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ModeCard(
+                title: ModeType.bomool.toKo,
+                number: 1000,
+                icon: FeatherIcons.list,
+                onTap: () {
+                  Get.to(() => BomoolView());
+                },
+              ),
+              const SizedBox(height: 12),
+              ModeCard(
+                title: ModeType.basic.toKo,
+                number: 1000,
+                icon: FeatherIcons.circle,
+                onTap: () {
+                  Get.to(() => QuizView(
+                        mode: ModeType.basic.toKo,
+                        level: ModeType.basic.toKo,
+                      ));
+                },
+              ),
+              const SizedBox(height: 12),
+              ModeCard(
+                title: ModeType.koreaTest.toKo,
+                number: 1000,
+                icon: FeatherIcons.circle,
+                onTap: () {
+                  Get.to(() => QuizView(
+                        mode: ModeType.koreaTest.toKo,
+                        level: ModeType.koreaTest.toKo,
+                      ));
+                },
+              ),
+              const SizedBox(height: 12),
+              ModeCard(
+                title: ModeType.toeic.toKo,
+                number: 1000,
+                icon: FeatherIcons.circle,
+                onTap: () {
+                  Get.to(() => QuizView(
+                        mode: ModeType.toeic.toKo,
+                        level: ModeType.toeic.toKo,
+                      ));
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

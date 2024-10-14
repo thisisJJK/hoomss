@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:hoomss/data/model/word_model.dart';
 import 'package:hoomss/data/word_data.dart';
 import 'package:path/path.dart';
@@ -20,7 +22,13 @@ class DatabaseService {
         join(await getDatabasesPath(), 'hoomss_database.db'),
         onCreate: (db, version) async {
           await db.execute(
-              'CREATE TABLE words(id INTEGER PRIMARY KEY,eng TEXT,kor TEXT)');
+              '''CREATE TABLE words(id INTEGER PRIMARY KEY,eng TEXT,kor TEXT,level TEXT
+              );
+              ''');
+          db.execute('''
+              CREATE TABLE bomool(id INTEGER PRIMARY KEY,eng TEXT,kor TEXT,level TEXT
+              );
+              ''');
 
           await _insertInitData(db);
         },
@@ -35,7 +43,7 @@ class DatabaseService {
 
   Future<bool> _insertInitData(Database db) async {
     try {
-      List<Map<String, dynamic>> words = wordData();
+      List<Map<String, dynamic>> words = basicData();
 
       for (var word in words) {
         await db.insert('words', word);
@@ -63,10 +71,10 @@ class DatabaseService {
 
     return List.generate(data.length, (i) {
       return WordModel(
-        id: data[i]['id'],
-        eng: data[i]['eng'],
-        kor: data[i]['kor'],
-      );
+          id: data[i]['id'],
+          eng: data[i]['eng'],
+          kor: data[i]['kor'],
+          level: data[i]['level']);
     });
   }
 
@@ -75,10 +83,10 @@ class DatabaseService {
     final List<Map<String, dynamic>> data =
         await db.query('words', where: 'id=?', whereArgs: [id]);
     return WordModel(
-      id: data[0]['id'],
-      eng: data[0]['eng'],
-      kor: data[0]['kor'],
-    );
+        id: data[0]['id'],
+        eng: data[0]['eng'],
+        kor: data[0]['kor'],
+        level: data[0]['level']);
   }
 
   Future<bool> updateWord(WordModel word) async {
@@ -109,5 +117,87 @@ class DatabaseService {
     } catch (err) {
       return false;
     }
+  }
+
+  Future<bool> insertBomoolWord(WordModel word) async {
+    final Database db = await database;
+    try {
+      db.insert('bomool', word.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  Future<List<WordModel>> readBomoolWords() async {
+    final Database db = await database;
+    final List<Map<String, dynamic>> data = await db.query('bomool');
+
+    return List.generate(data.length, (i) {
+      return WordModel(
+          id: data[i]['id'],
+          eng: data[i]['eng'],
+          kor: data[i]['kor'],
+          level: data[i]['level']);
+    });
+  }
+
+  Future<WordModel> readBomoolWord(int id) async {
+    final Database db = await database;
+    final List<Map<String, dynamic>> data =
+        await db.query('bomool', where: 'id=?', whereArgs: [id]);
+    return WordModel(
+        id: data[0]['id'],
+        eng: data[0]['eng'],
+        kor: data[0]['kor'],
+        level: data[0]['level']);
+  }
+
+  Future<bool> deleteBomoolWord(int id) async {
+    final Database db = await database;
+
+    try {
+      db.delete(
+        'bomool',
+        where: 'id=?',
+        whereArgs: [id],
+      );
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  Future<bool> updateBomoolWord(WordModel word) async {
+    final Database db = await database;
+    try {
+      db.update(
+        'bomool',
+        word.toMap(),
+        where: 'id=?',
+        whereArgs: [word.id],
+      );
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  Future<List<WordModel>> getRandomWords(String level, int count) async {
+    final Database db = await database;
+    final List<Map<String, dynamic>> allWords = await databaseConfig()
+        .then((_) => db.query('words', where: 'level =?', whereArgs: [level]));
+
+    if (allWords.length <= count) {
+      return allWords.map((map) => WordModel.fromMap(map)).toList();
+    }
+    List<Map<String, dynamic>> shuffledWords = List.from(allWords);
+    shuffledWords.shuffle(Random());
+
+    return shuffledWords
+        .take(count)
+        .map((map) => WordModel.fromMap(map))
+        .toList();
   }
 }
