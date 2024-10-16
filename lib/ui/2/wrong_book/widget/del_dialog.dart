@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hoomss/ui/2/bomoolbook/bomool_view_model.dart';
+import 'package:hoomss/data/word/word_model.dart';
+import 'package:hoomss/ui/2/wrong_book/wrong_view_model.dart';
 
-Widget delDialog(int id) {
+Widget delDialog(WordModel word) {
   return AlertDialog(
     title: const Text("이 단어를 삭제하시겠습니까?"),
     content: Column(
@@ -13,13 +14,14 @@ Widget delDialog(int id) {
           children: [
             ElevatedButton(
               onPressed: () {
-                Get.find<BomoolViewModel>()
+                Get.find<WrongViewModel>().databaseService.insertWord(word);
+                Get.find<WrongViewModel>()
                     .databaseService
-                    .deleteBomoolWord(id)
+                    .deleteWrongWord(word.id)
                     .then(
                   (result) {
                     if (result) {
-                      Get.find<BomoolViewModel>().readBomoolWordList();
+                      Get.find<WrongViewModel>().readWrongWordList();
                       Get.back();
                     } else {
                       print("delete error");

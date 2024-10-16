@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:hoomss/data/word/word_model.dart';
-import 'package:hoomss/ui/2/bomoolbook/bomool_view_model.dart';
-import 'package:hoomss/ui/2/bomoolbook/widget/add_dialog.dart';
-import 'package:hoomss/ui/2/bomoolbook/widget/edit_dialog.dart';
-import 'package:hoomss/ui/2/bomoolbook/widget/word_card.dart';
+import 'package:hoomss/ui/2/bomool_book/bomool_view_model.dart';
+import 'package:hoomss/ui/2/bomool_book/widget/add_dialog.dart';
+import 'package:hoomss/ui/2/bomool_book/widget/edit_dialog.dart';
+import 'package:hoomss/ui/2/bomool_book/widget/word_card.dart';
 
 class BomoolView extends StatelessWidget {
   BomoolView({super.key});
@@ -28,7 +28,7 @@ class BomoolView extends StatelessWidget {
         );
       } else if (_bomoolViewModel.wordList.isEmpty) {
         return const Center(
-          child: Text('empty'),
+          child: Text('단어를 추가해보세요'),
         );
       }
       return GridView.builder(

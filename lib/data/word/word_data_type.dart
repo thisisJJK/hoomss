@@ -1,5 +1,6 @@
 enum ModeType {
   bomool(toKo: '보물 단어장'),
+  wrong(toKo: '오답노답'),
   basic(toKo: '기초'),
   koreaTest(toKo: '수능'),
   toeic(toKo: '토익');

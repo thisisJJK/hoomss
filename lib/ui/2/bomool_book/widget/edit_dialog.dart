@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hoomss/data/word/word_data.dart';
+import 'package:hoomss/data/word/word_data_type.dart';
 import 'package:hoomss/data/word/word_model.dart';
-import 'package:hoomss/ui/2/bomoolbook/bomool_view_model.dart';
+import 'package:hoomss/ui/2/bomool_book/bomool_view_model.dart';
 
 class EditDialog extends StatelessWidget {
   final Future<WordModel> word;

@@ -1,4 +1,4 @@
-import 'package:hoomss/data/chat/chat_data.dart';
+import 'package:hoomss/data/chat/chat_data_type.dart';
 
 class ChatModel {
   // final int id;

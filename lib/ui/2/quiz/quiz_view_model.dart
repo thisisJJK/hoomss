@@ -6,18 +6,21 @@ import 'package:hoomss/data/database_service.dart';
 import 'package:hoomss/data/word/word_model.dart';
 
 class QuizViewModel extends GetxController {
+  int count = 2; // 문제 갯수
+
+  int incorrectCount = 0;
+
   late final FocusNode focusNode = FocusNode();
 
   var questions = <WordModel>[].obs;
   var currentIndex = 0.obs;
   var isCorrect = false.obs;
+  var isIncorrect = false.obs;
+  var isSame = false.obs;
   var choices = <String>[].obs;
-
-  int count = 5;
 
   final DatabaseService databaseService = Get.put(DatabaseService());
 
-  
   @override
   void onClose() {
     focusNode.dispose();
@@ -29,11 +32,19 @@ class QuizViewModel extends GetxController {
         .databaseConfig()
         .then((_) => databaseService.getRandomWords(level, count));
 
-    for (int i = 0; i < count; i++) {
-      questions.insert(i, randomWords[i]);
+    if (count <= randomWords.length) {
+      for (int i = 0; i < count; i++) {
+        questions.insert(i, randomWords[i]);
+      }
+      currentIndex.value = 0;
+      await setChoices();
+    } else {
+      for (int i = 0; i < randomWords.length; i++) {
+        questions.insert(i, randomWords[i]);
+      }
+      currentIndex.value = 0;
+      await setChoices();
     }
-    currentIndex.value = 0;
-    await setChoices();
   }
 
   Future<void> setChoices() async {
@@ -57,9 +68,11 @@ class QuizViewModel extends GetxController {
 
   void nextQuestion(String level, int count) {
     if (currentIndex.value == questions.length - 1) {
+      print('end');
       return oneMoreDialog(level, count);
     }
     if (currentIndex.value < questions.length - 1) {
+      print('next');
       currentIndex.value++;
     }
 
@@ -69,8 +82,27 @@ class QuizViewModel extends GetxController {
   void oneMoreDialog(String level, int count) {
     Get.dialog(
       AlertDialog(
-        title: const Text("흐흐.. 흥미진진하구만"),
-        content: const Text("한번 더 훔쳐볼래?"),
+        title: const Text("한번 더 훔쳐볼래?"),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              '결과 : ',
+              style: TextStyle(
+                fontSize: 30,
+              ),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            Text(
+              '$incorrectCount/$count',
+              style: const TextStyle(
+                fontSize: 32,
+              ),
+            ),
+          ],
+        ),
         actions: [
           TextButton(
             onPressed: () {

@@ -11,20 +11,23 @@ class QuizCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      Container(
-        height: 250,
-        width: double.infinity,
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.black12,
-        ),
-        child: Center(
-          child: Text(
-            word.eng,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 50,
+      Obx(
+        () => Container(
+          height: 250,
+          width: double.infinity,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            border: border(),
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.black12,
+          ),
+          child: Center(
+            child: Text(
+              word.eng,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 50,
+              ),
             ),
           ),
         ),
@@ -35,10 +38,13 @@ class QuizCard extends StatelessWidget {
           //즐겨찾기 -> 보물 단어장
           onTap: () {
             Get.find<QuizViewModel>().databaseService.insertBomoolWord(word);
-            Get.snackbar('훔치기 성공!', '흐흐... 보물 단어장에서 확인해봐',
-                snackPosition: SnackPosition.TOP,
-                duration: const Duration(milliseconds: 1500),
-                backgroundColor: Colors.white.withOpacity(0.1));
+            Get.snackbar(
+              '훔치기 성공!',
+              '흐흐... 보물 단어장에서 확인해봐',
+              snackPosition: SnackPosition.TOP,
+              duration: const Duration(milliseconds: 1500),
+              backgroundColor: Colors.white,
+            );
           },
           child: const Align(
             alignment: Alignment.centerRight,
@@ -50,5 +56,16 @@ class QuizCard extends StatelessWidget {
         ),
       ),
     ]);
+  }
+
+  BoxBorder? border() {
+    bool isCorrect = Get.find<QuizViewModel>().isCorrect.value;
+    bool isIncorrect = Get.find<QuizViewModel>().isIncorrect.value;
+    if (isCorrect) {
+      return Border.all(color: Colors.green);
+    } else if (isIncorrect) {
+      return Border.all(color: Colors.red);
+    }
+    return null;
   }
 }

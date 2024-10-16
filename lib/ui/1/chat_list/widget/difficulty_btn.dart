@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hoomss/data/chat/chat_data.dart';
+import 'package:hoomss/data/chat/chat_data_type.dart';
 import 'package:hoomss/ui/1/chat_list/chat_list_view_model.dart';
 
 //추가 해야할것

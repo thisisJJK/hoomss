@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
@@ -16,7 +18,7 @@ class QuizView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    quizViewModel.loadRandomWords(level, 5);
+    quizViewModel.loadRandomWords(level, quizViewModel.count);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: appbar(),
@@ -56,31 +58,94 @@ class QuizView extends StatelessWidget {
                     onTap: () {
                       if (currentWord.kor == quizViewModel.choices[0] &&
                           currentWord.eng == controller.text) {
+                        //정답
+                        quizViewModel.isCorrect.value = true;
                         controller.clear();
-                        quizViewModel.nextQuestion(level, quizViewModel.count);
+                        Timer(const Duration(milliseconds: 444), () {
+                          quizViewModel.isSame.value = false;
+                          quizViewModel.isCorrect.value = false;
+                          quizViewModel.nextQuestion(
+                              level, quizViewModel.count);
+                        });
+                      } else if (currentWord.kor != quizViewModel.choices[0] &&
+                          currentWord.eng == controller.text) {
+                        //오답
+                          quizViewModel.incorrectCount++;
+
+                        Get.find<QuizViewModel>()
+                            .databaseService
+                            .insertWrongWord(currentWord);
+                        Get.find<QuizViewModel>()
+                            .databaseService
+                            .deleteWord(currentWord.id);
+                        controller.clear();
+                        quizViewModel.isIncorrect.value = true;
+                        Timer(
+                          const Duration(milliseconds: 444),
+                          () {
+                            quizViewModel.isIncorrect.value = false;
+                            quizViewModel.isSame.value = false;
+
+                            quizViewModel.nextQuestion(
+                                level, quizViewModel.count);
+                          },
+                        );
                       }
                     },
                   ),
                   const SizedBox(width: 5),
                   AnswerBtn(
-                    text: quizViewModel.choices[1],
-                    onTap: () {
-                      if (currentWord.kor == quizViewModel.choices[1] &&
-                          currentWord.eng == controller.text) {
-                        controller.clear();
-                        quizViewModel.nextQuestion(level, quizViewModel.count);
-                      }
-                    },
-                  ),
+                      text: quizViewModel.choices[1],
+                      onTap: () {
+                        if (currentWord.kor == quizViewModel.choices[1] &&
+                            currentWord.eng == controller.text) {
+                          //정답
+                          controller.clear();
+                          quizViewModel.isCorrect.value = true;
+                          Timer(
+                            const Duration(milliseconds: 444),
+                            () {
+                              quizViewModel.isCorrect.value = false;
+                              quizViewModel.isSame.value = false;
+                              quizViewModel.nextQuestion(
+                                  level, quizViewModel.count);
+                            },
+                          );
+                        } else if (currentWord.kor !=
+                                quizViewModel.choices[1] &&
+                            currentWord.eng == controller.text) {
+                          //오답
+                          quizViewModel.incorrectCount++;
+                          Get.find<QuizViewModel>()
+                              .databaseService
+                              .insertWrongWord(currentWord);
+                          Get.find<QuizViewModel>()
+                              .databaseService
+                              .deleteWord(currentWord.id);
+                          controller.clear();
+                          quizViewModel.isIncorrect.value = true;
+                          Timer(
+                            const Duration(milliseconds: 444),
+                            () {
+                              quizViewModel.isIncorrect.value = false;
+                              quizViewModel.isSame.value = false;
+
+                              quizViewModel.nextQuestion(
+                                  level, quizViewModel.count);
+                            },
+                          );
+                        }
+                      }),
                 ],
               ),
-              const Spacer(),
 
               //텍스트 필드
               AnswerField(
+                word: currentWord,
                 controller: controller,
                 focusNode: Get.find<QuizViewModel>().focusNode,
               ),
+              const Spacer(),
             ],
           );
         }),

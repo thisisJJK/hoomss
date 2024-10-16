@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
-import 'package:hoomss/data/word/word_data.dart';
-import 'package:hoomss/ui/2/bomoolbook/bomool_view.dart';
+import 'package:hoomss/data/word/word_data_type.dart';
+import 'package:hoomss/ui/2/bomool_book/bomool_view.dart';
 import 'package:hoomss/ui/2/quiz/quiz_view.dart';
 import 'package:hoomss/ui/2/word/widget/mode_card.dart';
-
-
+import 'package:hoomss/ui/2/wrong_book/wrong_view.dart';
 
 class WordView extends StatelessWidget {
   const WordView({super.key});
@@ -26,9 +25,18 @@ class WordView extends StatelessWidget {
               ModeCard(
                 title: ModeType.bomool.toKo,
                 number: 1000,
-                icon: FeatherIcons.list,
+                icon: FeatherIcons.star,
                 onTap: () {
                   Get.to(() => BomoolView());
+                },
+              ),
+              const SizedBox(height: 12),
+              ModeCard(
+                title: ModeType.wrong.toKo,
+                number: 1000,
+                icon: FeatherIcons.x,
+                onTap: () {
+                  Get.to(() => WrongView());
                 },
               ),
               const SizedBox(height: 12),

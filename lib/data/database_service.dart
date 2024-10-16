@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:hoomss/data/word/word_data.dart';
+import 'package:hoomss/data/word/word_data_type.dart';
 import 'package:hoomss/data/word/word_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -36,24 +36,14 @@ class DatabaseService {
               level TEXT
               )
               ''');
-
-          // await db.execute('''
-          // CREATE TABLE chats(
-          //   id INTEGER PRIMARY KEY AUTOINCREMENT,
-          //   situation TEXT NOT NULL,
-          //   difficulty TEXT NOT NULL
-          // )
-          // ''');
-
-          // await db.execute('''
-          // CREATE TABLE conversations(
-          //   id INTEGER PRIMARY KEY AUTOINCREMENT,
-          //   content TEXT NOT NULL,
-          //   type TEXT NOT NULL,
-          //   chat_id INTEGER,
-          //   FOREIGN KEY (chat_id) REFERENCES chats (id)
-          // )
-          // ''');
+          await db.execute('''
+              CREATE TABLE wrong(
+              id INTEGER PRIMARY KEY,
+              eng TEXT,
+              kor TEXT,
+              level TEXT
+              )
+              ''');
 
           await _insertInitData(db);
         },
@@ -66,6 +56,7 @@ class DatabaseService {
     }
   }
 
+//초기 단어 데이터
   Future<bool> _insertInitData(Database db) async {
     try {
       //word
@@ -157,9 +148,33 @@ class DatabaseService {
     }
   }
 
+  Future<bool> insertWrongWord(WordModel word) async {
+    final Database db = await database;
+    try {
+      db.insert('wrong', word.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
   Future<List<WordModel>> readBomoolWords() async {
     final Database db = await database;
     final List<Map<String, dynamic>> data = await db.query('bomool');
+
+    return List.generate(data.length, (i) {
+      return WordModel(
+          id: data[i]['id'],
+          eng: data[i]['eng'],
+          kor: data[i]['kor'],
+          level: data[i]['level']);
+    });
+  }
+
+  Future<List<WordModel>> readWrongWords() async {
+    final Database db = await database;
+    final List<Map<String, dynamic>> data = await db.query('wrong');
 
     return List.generate(data.length, (i) {
       return WordModel(
@@ -181,12 +196,38 @@ class DatabaseService {
         level: data[0]['level']);
   }
 
+  Future<WordModel> readWrongWord(int id) async {
+    final Database db = await database;
+    final List<Map<String, dynamic>> data =
+        await db.query('bomool', where: 'id=?', whereArgs: [id]);
+    return WordModel(
+        id: data[0]['id'],
+        eng: data[0]['eng'],
+        kor: data[0]['kor'],
+        level: data[0]['level']);
+  }
+
   Future<bool> deleteBomoolWord(int id) async {
     final Database db = await database;
 
     try {
       db.delete(
         'bomool',
+        where: 'id=?',
+        whereArgs: [id],
+      );
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  Future<bool> deleteWrongWord(int id) async {
+    final Database db = await database;
+
+    try {
+      db.delete(
+        'wrong',
         where: 'id=?',
         whereArgs: [id],
       );
@@ -216,7 +257,7 @@ class DatabaseService {
     final List<Map<String, dynamic>> allWords = await databaseConfig()
         .then((_) => db.query('words', where: 'level =?', whereArgs: [level]));
 
-    if (allWords.length <= count) {
+    if (allWords.length < count) {
       return allWords.map((map) => WordModel.fromMap(map)).toList();
     }
     List<Map<String, dynamic>> shuffledWords = List.from(allWords);

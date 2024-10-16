@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:hoomss/data/chat/chat_data.dart';
+import 'package:hoomss/data/chat/chat_data_type.dart';
 import 'package:hoomss/data/chat/chat_model.dart';
 
 class ChatListViewModel extends GetxController {

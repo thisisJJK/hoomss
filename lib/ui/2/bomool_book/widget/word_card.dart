@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:hoomss/ui/2/bomoolbook/widget/del_dialog.dart';
+import 'package:hoomss/ui/2/bomool_book/widget/del_dialog.dart';
 
 class WordCard extends StatelessWidget {
   final int id;
@@ -24,6 +24,7 @@ class WordCard extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: Row(
               children: [
+                
                 const Spacer(),
                 GestureDetector(
                   onTap: () {

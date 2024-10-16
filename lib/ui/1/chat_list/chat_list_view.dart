@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:hoomss/common/widget/hoomss_title.dart';
-import 'package:hoomss/data/chat/chat_data.dart';
+import 'package:hoomss/data/chat/chat_data_type.dart';
 import 'package:hoomss/ui/1/chat/chat_view.dart';
 import 'package:hoomss/ui/1/chat_list/chat_list_view_model.dart';
 import 'package:hoomss/ui/1/chat_list/widget/difficulty_btn.dart';

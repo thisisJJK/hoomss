@@ -31,6 +31,6 @@ class WordModel {
 
   @override
   String toString() {
-    return 'WordModel{id: $id, eng: $eng, kor: $kor, level: $level}';
+    return 'WordModel{id:$id, eng: $eng, kor: $kor, level: $level,}';
   }
 }

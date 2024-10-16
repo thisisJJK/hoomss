@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hoomss/data/chat/chat_data.dart';
+import 'package:hoomss/data/chat/chat_data_type.dart';
 import 'package:hoomss/ui/1/chat/chat_view_model.dart';
 
 class Bubble extends StatelessWidget {
