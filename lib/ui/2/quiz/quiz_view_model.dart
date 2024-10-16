@@ -68,11 +68,9 @@ class QuizViewModel extends GetxController {
 
   void nextQuestion(String level, int count) {
     if (currentIndex.value == questions.length - 1) {
-      print('end');
       return oneMoreDialog(level, count);
     }
     if (currentIndex.value < questions.length - 1) {
-      print('next');
       currentIndex.value++;
     }
 
@@ -80,6 +78,7 @@ class QuizViewModel extends GetxController {
   }
 
   void oneMoreDialog(String level, int count) {
+    int correctCount = count - incorrectCount;
     Get.dialog(
       AlertDialog(
         title: const Text("한번 더 훔쳐볼래?"),
@@ -96,7 +95,7 @@ class QuizViewModel extends GetxController {
               width: 5,
             ),
             Text(
-              '$incorrectCount/$count',
+              '$correctCount / $count',
               style: const TextStyle(
                 fontSize: 32,
               ),

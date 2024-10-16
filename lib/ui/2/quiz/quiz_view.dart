@@ -11,7 +11,12 @@ import 'package:hoomss/ui/2/quiz/widget/quiz_card.dart';
 class QuizView extends StatelessWidget {
   final String level;
   final String mode;
-  QuizView({super.key, required this.mode, required this.level});
+
+  QuizView(
+      {super.key,
+      required this.mode,
+      required this.level,
+      });
 
   final QuizViewModel quizViewModel = Get.put(QuizViewModel());
   final TextEditingController controller = TextEditingController();
@@ -45,8 +50,12 @@ class QuizView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
+
               //단어 카드
-              QuizCard(word: currentWord),
+              QuizCard(
+                word: currentWord,
+
+              ),
               const SizedBox(height: 12),
 
               //보기 버튼 2개
@@ -70,7 +79,7 @@ class QuizView extends StatelessWidget {
                       } else if (currentWord.kor != quizViewModel.choices[0] &&
                           currentWord.eng == controller.text) {
                         //오답
-                          quizViewModel.incorrectCount++;
+                        quizViewModel.incorrectCount++;
 
                         Get.find<QuizViewModel>()
                             .databaseService

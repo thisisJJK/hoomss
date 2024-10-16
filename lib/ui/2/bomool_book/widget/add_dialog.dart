@@ -15,6 +15,8 @@ class AddDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.find<BomoolViewModel>().readBomoolWordList();
+
     return AlertDialog(
       title: const Text('추가'),
       content: SizedBox(
@@ -39,12 +41,17 @@ class AddDialog extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Get.find<BomoolViewModel>().currentCount =
-                        Get.find<BomoolViewModel>().wordList.length;
+                    var wordList = Get.find<BomoolViewModel>().wordList;
+                    int id = 1;
+
+                    if (wordList.isNotEmpty) {
+                      id = wordList.last.id + 1;
+                    }
+
                     Get.find<BomoolViewModel>()
                         .databaseService
                         .insertBomoolWord(WordModel(
-                          id: Get.find<BomoolViewModel>().currentCount + 1,
+                          id: id,
                           eng: engController.text,
                           kor: korController.text,
                           level: ModeType.bomool.toKo,

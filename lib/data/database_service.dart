@@ -239,10 +239,30 @@ class DatabaseService {
 
   Future<bool> updateBomoolWord(WordModel word) async {
     final Database db = await database;
+
     try {
       db.update(
         'bomool',
         word.toMap(),
+        where: 'id=?',
+        whereArgs: [word.id],
+      );
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  Future<bool> updateLevelBomoolWord(WordModel word) async {
+    final Database db = await database;
+    Map<String, dynamic> level = {
+      'level': '보물',
+    };
+
+    try {
+      db.update(
+        'bomool',
+        level,
         where: 'id=?',
         whereArgs: [word.id],
       );

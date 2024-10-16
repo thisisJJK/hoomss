@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
+import 'package:hoomss/data/word/word_data_type.dart';
 import 'package:hoomss/data/word/word_model.dart';
 import 'package:hoomss/ui/2/bomool_book/bomool_view_model.dart';
 import 'package:hoomss/ui/2/bomool_book/widget/add_dialog.dart';
 import 'package:hoomss/ui/2/bomool_book/widget/edit_dialog.dart';
 import 'package:hoomss/ui/2/bomool_book/widget/word_card.dart';
+import 'package:hoomss/ui/2/quiz/quiz_view.dart';
 
 class BomoolView extends StatelessWidget {
   BomoolView({super.key});
@@ -17,6 +19,18 @@ class BomoolView extends StatelessWidget {
     return Scaffold(
       appBar: appbar(context),
       body: body(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.to(
+            () => QuizView(
+              mode: ModeType.bomool.toKo,
+              level: ModeType.bomool.toKo,
+
+            ),
+          );
+        },
+        child: const Icon(FeatherIcons.play),
+      ),
     );
   }
 
@@ -28,7 +42,10 @@ class BomoolView extends StatelessWidget {
         );
       } else if (_bomoolViewModel.wordList.isEmpty) {
         return const Center(
-          child: Text('단어를 추가해보세요'),
+          child: Text(
+            '나만의 단어를 추가해보세요',
+            style: TextStyle(fontSize: 21),
+          ),
         );
       }
       return GridView.builder(
@@ -46,6 +63,7 @@ class BomoolView extends StatelessWidget {
                 Future<WordModel> word = Get.find<BomoolViewModel>()
                     .databaseService
                     .readBomoolWord(_bomoolViewModel.wordList[index].id);
+
                 showDialog(
                     context: context,
                     builder: (BuildContext context) => EditDialog(
@@ -66,13 +84,13 @@ class BomoolView extends StatelessWidget {
   AppBar appbar(context) {
     return AppBar(
       centerTitle: true,
-      title: const Row(
+      title: Row(
         children: [
-          Icon(FeatherIcons.book),
-          SizedBox(width: 3),
+          const Icon(FeatherIcons.book),
+          const SizedBox(width: 3),
           Text(
-            '보물 단어장',
-            style: TextStyle(
+            ModeType.bomool.toKo,
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),

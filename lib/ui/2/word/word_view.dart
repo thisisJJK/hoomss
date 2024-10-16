@@ -22,6 +22,7 @@ class WordView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              //보물 단어장
               ModeCard(
                 title: ModeType.bomool.toKo,
                 number: 1000,
@@ -31,6 +32,8 @@ class WordView extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 12),
+
+              //오답노답
               ModeCard(
                 title: ModeType.wrong.toKo,
                 number: 1000,
@@ -40,6 +43,8 @@ class WordView extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 12),
+
+              //기초
               ModeCard(
                 title: ModeType.basic.toKo,
                 number: 1000,
@@ -48,10 +53,13 @@ class WordView extends StatelessWidget {
                   Get.to(() => QuizView(
                         mode: ModeType.basic.toKo,
                         level: ModeType.basic.toKo,
+
                       ));
                 },
               ),
               const SizedBox(height: 12),
+
+              //수능
               ModeCard(
                 title: ModeType.koreaTest.toKo,
                 number: 1000,
@@ -60,10 +68,13 @@ class WordView extends StatelessWidget {
                   Get.to(() => QuizView(
                         mode: ModeType.koreaTest.toKo,
                         level: ModeType.koreaTest.toKo,
+
                       ));
                 },
               ),
               const SizedBox(height: 12),
+
+              //토익
               ModeCard(
                 title: ModeType.toeic.toKo,
                 number: 1000,
@@ -72,6 +83,7 @@ class WordView extends StatelessWidget {
                   Get.to(() => QuizView(
                         mode: ModeType.toeic.toKo,
                         level: ModeType.toeic.toKo,
+
                       ));
                 },
               ),

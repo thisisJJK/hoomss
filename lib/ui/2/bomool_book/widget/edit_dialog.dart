@@ -57,6 +57,8 @@ class EditDialog extends StatelessWidget {
                               if (result) {
                                 Get.find<BomoolViewModel>()
                                     .readBomoolWordList();
+                                engController.text = '';
+                                korController.text = '';
                                 Get.back();
                               }
                             });
@@ -65,6 +67,8 @@ class EditDialog extends StatelessWidget {
                         ),
                         ElevatedButton(
                           onPressed: () {
+                            engController.text = '';
+                            korController.text = '';
                             Get.back();
                           },
                           child: const Text('취소'),
