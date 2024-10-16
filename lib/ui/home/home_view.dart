@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoomss/common/widget/hoomss_title.dart';
-import 'package:hoomss/ui/1/conversation/conversation_view.dart';
+import 'package:hoomss/ui/1/chat_list/chat_list_view.dart';
 import 'package:hoomss/ui/2/word/word_view.dart';
 
 class HomeView extends StatelessWidget {
@@ -70,7 +70,7 @@ class HomeView extends StatelessWidget {
   GestureDetector conversation() {
     return GestureDetector(
       onTap: () {
-        Get.to(() => const ConversationView());
+        Get.to(() =>  ChatListView());
       },
       child: Container(
         width: 207,

@@ -1,0 +1,34 @@
+{
+    "chats": [
+     
+      {
+        "situation": "text",
+        "difficulty": "easy",
+        "conversations": [
+          {"content": "12", "type": "sent"},
+          {"content": "34", "type": "received"}
+        
+
+
+        ]
+      },
+      {
+        "situation": "Ordering Food",
+        "difficulty": "medium",
+        "conversations": [
+          {"content": "I'd like to order a cheeseburger, please.", "type": "sent"},
+          {"content": "Sure! Would you like fries with that?", "type": "received"}
+        ]
+      },
+      {
+        "situation": "Emergency Situation",
+        "difficulty": "hard",
+        "conversations": [
+          {"content": "Help! I need an ambulance.", "type": "sent"},
+          {"content": "Stay calm. What's your location?", "type": "received"}
+        ]
+      }
+    ]
+  }
+  
+  

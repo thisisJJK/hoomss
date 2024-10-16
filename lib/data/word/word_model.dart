@@ -1,5 +1,3 @@
-import 'package:hoomss/ui/2/word/word_view.dart';
-
 class WordModel {
   final int id;
   final String eng;

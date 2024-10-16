@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoomss/data/database_service.dart';
-import 'package:hoomss/data/model/word_model.dart';
+import 'package:hoomss/data/word/word_model.dart';
 
 class QuizViewModel extends GetxController {
   late final FocusNode focusNode = FocusNode();
@@ -17,6 +17,7 @@ class QuizViewModel extends GetxController {
 
   final DatabaseService databaseService = Get.put(DatabaseService());
 
+  
   @override
   void onClose() {
     focusNode.dispose();

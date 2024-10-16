@@ -1,14 +1,13 @@
 import 'dart:math';
 
-import 'package:hoomss/data/model/word_model.dart';
-import 'package:hoomss/data/word_data.dart';
+import 'package:hoomss/data/word/word_data.dart';
+import 'package:hoomss/data/word/word_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
   static final DatabaseService _databaseService = DatabaseService._internal();
   late Future<Database> database;
-  final int _wordVersion = 1;
 
   factory DatabaseService() => _databaseService;
 
@@ -21,18 +20,44 @@ class DatabaseService {
       database = openDatabase(
         join(await getDatabasesPath(), 'hoomss_database.db'),
         onCreate: (db, version) async {
-          await db.execute(
-              '''CREATE TABLE words(id INTEGER PRIMARY KEY,eng TEXT,kor TEXT,level TEXT
-              );
+          await db.execute('''
+              CREATE TABLE words(
+              id INTEGER PRIMARY KEY,
+              eng TEXT,
+              kor TEXT,
+              level TEXT
+              )
               ''');
-          db.execute('''
-              CREATE TABLE bomool(id INTEGER PRIMARY KEY,eng TEXT,kor TEXT,level TEXT
-              );
+          await db.execute('''
+              CREATE TABLE bomool(
+              id INTEGER PRIMARY KEY,
+              eng TEXT,
+              kor TEXT,
+              level TEXT
+              )
               ''');
+
+          // await db.execute('''
+          // CREATE TABLE chats(
+          //   id INTEGER PRIMARY KEY AUTOINCREMENT,
+          //   situation TEXT NOT NULL,
+          //   difficulty TEXT NOT NULL
+          // )
+          // ''');
+
+          // await db.execute('''
+          // CREATE TABLE conversations(
+          //   id INTEGER PRIMARY KEY AUTOINCREMENT,
+          //   content TEXT NOT NULL,
+          //   type TEXT NOT NULL,
+          //   chat_id INTEGER,
+          //   FOREIGN KEY (chat_id) REFERENCES chats (id)
+          // )
+          // ''');
 
           await _insertInitData(db);
         },
-        version: _wordVersion,
+        version: 1,
       );
       return true;
     } catch (err) {
@@ -43,11 +68,13 @@ class DatabaseService {
 
   Future<bool> _insertInitData(Database db) async {
     try {
-      List<Map<String, dynamic>> words = basicData();
+      //word
+      List<Map<String, dynamic>> words = wordData();
 
       for (var word in words) {
         await db.insert('words', word);
       }
+
       return true;
     } catch (err) {
       return false;

@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:hoomss/data/database_service.dart';
-import 'package:hoomss/data/model/word_model.dart';
+import 'package:hoomss/data/word/word_model.dart';
 
 class BomoolViewModel extends GetxController {
   final DatabaseService databaseService = Get.put(DatabaseService());

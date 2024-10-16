@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
-import 'package:hoomss/data/model/word_model.dart';
+import 'package:hoomss/data/word/word_model.dart';
 import 'package:hoomss/ui/2/quiz/quiz_view_model.dart';
 
 class QuizCard extends StatelessWidget {

@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:get/instance_manager.dart';
-import 'package:hoomss/data/dummy.dart';
+import 'package:get/get.dart';
+import 'package:hoomss/data/chat/chat_model.dart';
 import 'package:hoomss/ui/1/chat/chat_view_model.dart';
 import 'package:hoomss/ui/1/chat/widget/bubble.dart';
 
 class ChatView extends StatelessWidget {
-  const ChatView({super.key});
+  final ChatModel chat;
+  ChatView({
+    super.key,
+    required this.chat,
+  }) {
+    Get.put(
+      ChatViewModel(
+        chatModel: chat,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final ChatViewModel chatViewModel = Get.put(ChatViewModel());
-
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -21,7 +28,6 @@ class ChatView extends StatelessWidget {
           child: IconButton(
             onPressed: () {
               Navigator.of(context).pop();
-              Get.delete<ChatViewModel>();
             },
             icon: const Icon(
               FeatherIcons.arrowLeft,
@@ -30,50 +36,49 @@ class ChatView extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        title: const Text(
-          'Jack\'s chatroom',
-          style: TextStyle(
+        title: Text(
+          chat.situation,
+          style: const TextStyle(
               fontWeight: FontWeight.w700, fontSize: 21, letterSpacing: 0),
         ),
       ),
 
       //채팅창
-      body: Obx(
-        () => Column(
-          children: [
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  Get.find<ChatViewModel>().focusNode.unfocus();
-
-                },
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          Get.find<ChatViewModel>().focusNode.unfocus();
+        },
+        child: Obx(
+          () => Column(
+            children: [
+              Expanded(
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: ListView.separated(
                     padding: const EdgeInsets.only(bottom: 10),
-                    controller: chatViewModel.scrollController,
-                    reverse: true,
+                    controller: Get.find<ChatViewModel>().scrollController,
+                    reverse: false,
                     shrinkWrap: true,
-                    itemCount: chatViewModel.loadCount.value,
+                    itemCount: Get.find<ChatViewModel>().currentChats.length,
                     separatorBuilder: (BuildContext context, int index) {
                       return const SizedBox(height: 10);
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      return chatViewModel.loadCount.value == 1
-                          ? Bubble(
-                              chat: chatViewModel
-                                  .chatList[chatViewModel.loadCount.value - 1])
-                          : Bubble(
-                              chat: chatViewModel.chatList[
-                                  chatViewModel.loadCount.value - 1 - index]);
+                      final String bubble =
+                          Get.find<ChatViewModel>().currentChats[index].content;
+                      final int count = index;
+                      return Bubble(
+                        bubble: bubble,
+                        count: count,
+                      );
                     },
                   ),
                 ),
               ),
-            ),
-            BottomInputField(
-                chatViewModel.chatList[chatViewModel.loadCount.value - 1]),
-          ],
+              const BottomInputField(),
+            ],
+          ),
         ),
       ),
     );
@@ -81,8 +86,9 @@ class ChatView extends StatelessWidget {
 }
 
 class BottomInputField extends StatelessWidget {
-  final Chat chat;
-  const BottomInputField(this.chat, {super.key});
+  const BottomInputField({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +110,7 @@ class BottomInputField extends StatelessWidget {
             ),
             Expanded(
               child: TextField(
+                autofocus: true,
                 focusNode: Get.find<ChatViewModel>().focusNode,
                 controller: Get.find<ChatViewModel>().textEditingController,
                 maxLines: null,
@@ -129,10 +136,23 @@ class BottomInputField extends StatelessWidget {
             IconButton(
               icon: const Icon(FeatherIcons.send),
               onPressed: () {
-                if (chat.message ==
+                if (Get.find<ChatViewModel>()
+                        .currentChats[
+                            Get.find<ChatViewModel>().currentIndex.value]
+                        .content ==
                     Get.find<ChatViewModel>().textEditingController.text) {
                   Get.find<ChatViewModel>().onSubmitted(
                       Get.find<ChatViewModel>().textEditingController.text);
+
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    Get.find<ChatViewModel>().scrollController.animateTo(
+                        Get.find<ChatViewModel>()
+                            .scrollController
+                            .position
+                            .maxScrollExtent,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut);
+                  });
                 }
               },
             )

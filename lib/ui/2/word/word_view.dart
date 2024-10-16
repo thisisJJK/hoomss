@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
+import 'package:hoomss/data/word/word_data.dart';
 import 'package:hoomss/ui/2/bomoolbook/bomool_view.dart';
 import 'package:hoomss/ui/2/quiz/quiz_view.dart';
 import 'package:hoomss/ui/2/word/widget/mode_card.dart';
 
-enum ModeType {
-  bomool(toKo: '보물 단어장'),
 
-  basic(toKo: '기초'),
-  koreaTest(toKo: '수능'),
-  toeic(toKo: '토익');
-
-  final String toKo;
-  const ModeType({required this.toKo});
-}
 
 class WordView extends StatelessWidget {
   const WordView({super.key});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hoomss/data/model/word_model.dart';
+import 'package:hoomss/data/word/word_data.dart';
+import 'package:hoomss/data/word/word_model.dart';
 import 'package:hoomss/ui/2/bomoolbook/bomool_view_model.dart';
-import 'package:hoomss/ui/2/word/word_view.dart';
 
 class EditDialog extends StatelessWidget {
   final Future<WordModel> word;
@@ -47,10 +47,11 @@ class EditDialog extends StatelessWidget {
                                 .databaseService
                                 .updateBomoolWord(
                                   WordModel(
-                                      id: snapshot.data!.id,
-                                      eng: engController.text,
-                                      kor: korController.text,
-                                      level: ModeType.bomool.toKo,),
+                                    id: snapshot.data!.id,
+                                    eng: engController.text,
+                                    kor: korController.text,
+                                    level: ModeType.bomool.toKo,
+                                  ),
                                 )
                                 .then((result) {
                               if (result) {

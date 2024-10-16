@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hoomss/data/model/word_model.dart';
+import 'package:hoomss/data/word/word_data.dart';
+import 'package:hoomss/data/word/word_model.dart';
 import 'package:hoomss/ui/2/bomoolbook/bomool_view_model.dart';
-import 'package:hoomss/ui/2/word/word_view.dart';
 
 class AddDialog extends StatelessWidget {
   final TextEditingController engController;
@@ -22,10 +22,16 @@ class AddDialog extends StatelessWidget {
         child: Column(
           children: [
             const Text('단어'),
+            const SizedBox(
+              height: 1,
+            ),
             TextField(
               controller: engController,
             ),
             const Text('의미'),
+            const SizedBox(
+              height: 1,
+            ),
             TextField(
               controller: korController,
             ),
