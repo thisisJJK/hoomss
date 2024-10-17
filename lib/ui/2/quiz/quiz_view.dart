@@ -3,27 +3,35 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
+import 'package:hoomss/data/word/word_data_type.dart';
+import 'package:hoomss/ui/2/bomool_book/bomool_view_model.dart';
 import 'package:hoomss/ui/2/quiz/quiz_view_model.dart';
 import 'package:hoomss/ui/2/quiz/widget/answer_btn.dart';
 import 'package:hoomss/ui/2/quiz/widget/answer_field.dart';
 import 'package:hoomss/ui/2/quiz/widget/quiz_card.dart';
+import 'package:hoomss/ui/2/wrong_book/wrong_view_model.dart';
 
 class QuizView extends StatelessWidget {
   final String level;
   final String mode;
 
-  QuizView(
-      {super.key,
-      required this.mode,
-      required this.level,
-      });
+  QuizView({
+    super.key,
+    required this.mode,
+    required this.level,
+  });
 
   final QuizViewModel quizViewModel = Get.put(QuizViewModel());
+  final BomoolViewModel bomoolViewModel = Get.put(BomoolViewModel());
+  final WrongViewModel wrongViewModel = Get.put(WrongViewModel());
+
   final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    quizViewModel.loadRandomWords(level, quizViewModel.count);
+    quizViewModel.loadRandomWords(
+        mode, quizViewModel.count, quizViewModel.loadByTable(mode));
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: appbar(),
@@ -33,7 +41,7 @@ class QuizView extends StatelessWidget {
           if (quizViewModel.questions.isEmpty ||
               quizViewModel.choices.isEmpty) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: Text('나만의 단어로 퀴즈를 풀어보세요'),
             );
           }
           var currentWord =
@@ -54,7 +62,6 @@ class QuizView extends StatelessWidget {
               //단어 카드
               QuizCard(
                 word: currentWord,
-
               ),
               const SizedBox(height: 12),
 
@@ -62,6 +69,7 @@ class QuizView extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  //보기 1번
                   AnswerBtn(
                     text: quizViewModel.choices[0],
                     onTap: () {
@@ -69,24 +77,26 @@ class QuizView extends StatelessWidget {
                           currentWord.eng == controller.text) {
                         //정답
                         quizViewModel.isCorrect.value = true;
+                        quizViewModel.databaseService
+                            .updateIsCorrectedWord(currentWord);
                         controller.clear();
                         Timer(const Duration(milliseconds: 444), () {
                           quizViewModel.isSame.value = false;
                           quizViewModel.isCorrect.value = false;
-                          quizViewModel.nextQuestion(
-                              level, quizViewModel.count);
+                          quizViewModel.nextQuestion(level, quizViewModel.count,
+                              quizViewModel.loadByTable(mode));
                         });
                       } else if (currentWord.kor != quizViewModel.choices[0] &&
                           currentWord.eng == controller.text) {
                         //오답
                         quizViewModel.incorrectCount++;
 
-                        Get.find<QuizViewModel>()
-                            .databaseService
+                        quizViewModel.databaseService
                             .insertWrongWord(currentWord);
-                        Get.find<QuizViewModel>()
-                            .databaseService
-                            .deleteWord(currentWord.id);
+                        if (mode != ModeType.bomool.toKo) {
+                          quizViewModel.databaseService
+                              .deleteWord(currentWord.id);
+                        }
                         controller.clear();
                         quizViewModel.isIncorrect.value = true;
                         Timer(
@@ -96,55 +106,67 @@ class QuizView extends StatelessWidget {
                             quizViewModel.isSame.value = false;
 
                             quizViewModel.nextQuestion(
-                                level, quizViewModel.count);
+                                level,
+                                quizViewModel.count,
+                                quizViewModel.loadByTable(mode));
                           },
                         );
                       }
                     },
                   ),
                   const SizedBox(width: 5),
-                  AnswerBtn(
-                      text: quizViewModel.choices[1],
-                      onTap: () {
-                        if (currentWord.kor == quizViewModel.choices[1] &&
-                            currentWord.eng == controller.text) {
-                          //정답
-                          controller.clear();
-                          quizViewModel.isCorrect.value = true;
-                          Timer(
-                            const Duration(milliseconds: 444),
-                            () {
-                              quizViewModel.isCorrect.value = false;
-                              quizViewModel.isSame.value = false;
-                              quizViewModel.nextQuestion(
-                                  level, quizViewModel.count);
-                            },
-                          );
-                        } else if (currentWord.kor !=
-                                quizViewModel.choices[1] &&
-                            currentWord.eng == controller.text) {
-                          //오답
-                          quizViewModel.incorrectCount++;
-                          Get.find<QuizViewModel>()
-                              .databaseService
-                              .insertWrongWord(currentWord);
-                          Get.find<QuizViewModel>()
-                              .databaseService
-                              .deleteWord(currentWord.id);
-                          controller.clear();
-                          quizViewModel.isIncorrect.value = true;
-                          Timer(
-                            const Duration(milliseconds: 444),
-                            () {
-                              quizViewModel.isIncorrect.value = false;
-                              quizViewModel.isSame.value = false;
 
-                              quizViewModel.nextQuestion(
-                                  level, quizViewModel.count);
-                            },
-                          );
+                  //보기 2번
+                  AnswerBtn(
+                    text: quizViewModel.choices[1],
+                    onTap: () {
+                      if (currentWord.kor == quizViewModel.choices[1] &&
+                          currentWord.eng == controller.text) {
+                        //정답
+                        controller.clear();
+                        quizViewModel.isCorrect.value = true;
+                        quizViewModel.databaseService
+                            .updateIsCorrectedWord(currentWord);
+                        Timer(
+                          const Duration(milliseconds: 444),
+                          () {
+                            quizViewModel.isCorrect.value = false;
+                            quizViewModel.isSame.value = false;
+                            quizViewModel.nextQuestion(
+                                level,
+                                quizViewModel.count,
+                                quizViewModel.loadByTable(mode));
+                          },
+                        );
+                      } else if (currentWord.kor != quizViewModel.choices[1] &&
+                          currentWord.eng == controller.text) {
+                        //오답
+                        quizViewModel.incorrectCount++;
+
+                        quizViewModel.databaseService
+                            .insertWrongWord(currentWord);
+
+                        if (mode != ModeType.bomool.toKo) {
+                          quizViewModel.databaseService
+                              .deleteWord(currentWord.id);
                         }
-                      }),
+                        controller.clear();
+                        quizViewModel.isIncorrect.value = true;
+                        Timer(
+                          const Duration(milliseconds: 444),
+                          () {
+                            quizViewModel.isIncorrect.value = false;
+                            quizViewModel.isSame.value = false;
+
+                            quizViewModel.nextQuestion(
+                                level,
+                                quizViewModel.count,
+                                quizViewModel.loadByTable(mode));
+                          },
+                        );
+                      }
+                    },
+                  ),
                 ],
               ),
 

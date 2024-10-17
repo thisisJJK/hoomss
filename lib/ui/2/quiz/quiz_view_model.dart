@@ -3,10 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoomss/data/database_service.dart';
+import 'package:hoomss/data/word/word_data_type.dart';
 import 'package:hoomss/data/word/word_model.dart';
 
 class QuizViewModel extends GetxController {
-  int count = 2; // 문제 갯수
+  int count = 5; // 문제 갯수
 
   int incorrectCount = 0;
 
@@ -17,6 +18,7 @@ class QuizViewModel extends GetxController {
   var isCorrect = false.obs;
   var isIncorrect = false.obs;
   var isSame = false.obs;
+  var isLoaded = false.obs;
   var choices = <String>[].obs;
 
   final DatabaseService databaseService = Get.put(DatabaseService());
@@ -27,10 +29,27 @@ class QuizViewModel extends GetxController {
     super.onClose();
   }
 
-  Future<void> loadRandomWords(String level, int count) async {
+  String loadByTable(String mode) {
+    String table;
+
+    if (!isLoaded.value) {
+      if (mode == ModeType.bomool.toKo) {
+        table = 'bomool';
+      } else if (mode == ModeType.wrong.toKo) {
+        table = 'wrong';
+      } else {
+        table = 'words';
+      }
+      isLoaded.value = true;
+      return table;
+    }
+    return '';
+  }
+
+  Future<void> loadRandomWords(String mode, int count, String table) async {
     var randomWords = await databaseService
         .databaseConfig()
-        .then((_) => databaseService.getRandomWords(level, count));
+        .then((_) => databaseService.getRandomWords(mode, count, table));
 
     if (count <= randomWords.length) {
       for (int i = 0; i < count; i++) {
@@ -66,9 +85,9 @@ class QuizViewModel extends GetxController {
     choices.shuffle(Random());
   }
 
-  void nextQuestion(String level, int count) {
+  void nextQuestion(String mode, int count, String table) {
     if (currentIndex.value == questions.length - 1) {
-      return oneMoreDialog(level, count);
+      return oneMoreDialog(mode, count, table);
     }
     if (currentIndex.value < questions.length - 1) {
       currentIndex.value++;
@@ -77,8 +96,7 @@ class QuizViewModel extends GetxController {
     setChoices();
   }
 
-  void oneMoreDialog(String level, int count) {
-    int correctCount = count - incorrectCount;
+  void oneMoreDialog(String mode, int count, String table) {
     Get.dialog(
       AlertDialog(
         title: const Text("한번 더 훔쳐볼래?"),
@@ -86,7 +104,7 @@ class QuizViewModel extends GetxController {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              '결과 : ',
+              '오답 : ',
               style: TextStyle(
                 fontSize: 30,
               ),
@@ -95,7 +113,7 @@ class QuizViewModel extends GetxController {
               width: 5,
             ),
             Text(
-              '$correctCount / $count',
+              '$incorrectCount 개',
               style: const TextStyle(
                 fontSize: 32,
               ),
@@ -115,8 +133,10 @@ class QuizViewModel extends GetxController {
               questions.value = [];
               choices.value = [];
               currentIndex.value = 0;
+              incorrectCount = 0;
+              isLoaded.value = false;
 
-              loadRandomWords(level, count);
+              loadRandomWords(mode, count, loadByTable(mode));
               Get.back();
             }, // 다이얼로그 닫기
             child: const Text("한번더"),
@@ -125,4 +145,7 @@ class QuizViewModel extends GetxController {
       ),
     );
   }
+
+
+
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hoomss/data/word/word_data_type.dart';
 import 'package:hoomss/data/word/word_model.dart';
 import 'package:hoomss/ui/2/wrong_book/wrong_view_model.dart';
 
@@ -14,7 +15,9 @@ Widget delDialog(WordModel word) {
           children: [
             ElevatedButton(
               onPressed: () {
-                Get.find<WrongViewModel>().databaseService.insertWord(word);
+                if (word.level != ModeType.bomool.toKo) {
+                  Get.find<WrongViewModel>().databaseService.insertWord(word);
+                }
                 Get.find<WrongViewModel>()
                     .databaseService
                     .deleteWrongWord(word.id)

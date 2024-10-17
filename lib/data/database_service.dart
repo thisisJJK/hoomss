@@ -25,7 +25,8 @@ class DatabaseService {
               id INTEGER PRIMARY KEY,
               eng TEXT,
               kor TEXT,
-              level TEXT
+              level TEXT,
+              correct BOOL DEFAULT 0
               )
               ''');
           await db.execute('''
@@ -33,7 +34,9 @@ class DatabaseService {
               id INTEGER PRIMARY KEY,
               eng TEXT,
               kor TEXT,
-              level TEXT
+              level TEXT,
+              correct BOOL DEFAULT 0
+
               )
               ''');
           await db.execute('''
@@ -41,7 +44,9 @@ class DatabaseService {
               id INTEGER PRIMARY KEY,
               eng TEXT,
               kor TEXT,
-              level TEXT
+              level TEXT,
+              correct BOOL DEFAULT 0
+
               )
               ''');
 
@@ -89,10 +94,12 @@ class DatabaseService {
 
     return List.generate(data.length, (i) {
       return WordModel(
-          id: data[i]['id'],
-          eng: data[i]['eng'],
-          kor: data[i]['kor'],
-          level: data[i]['level']);
+        id: data[i]['id'],
+        eng: data[i]['eng'],
+        kor: data[i]['kor'],
+        level: data[i]['level'],
+        correct: data[i]['correct'],
+      );
     });
   }
 
@@ -101,10 +108,12 @@ class DatabaseService {
     final List<Map<String, dynamic>> data =
         await db.query('words', where: 'id=?', whereArgs: [id]);
     return WordModel(
-        id: data[0]['id'],
-        eng: data[0]['eng'],
-        kor: data[0]['kor'],
-        level: data[0]['level']);
+      id: data[0]['id'],
+      eng: data[0]['eng'],
+      kor: data[0]['kor'],
+      level: data[0]['level'],
+      correct: data[0]['correct'],
+    );
   }
 
   Future<bool> updateWord(WordModel word) async {
@@ -178,10 +187,12 @@ class DatabaseService {
 
     return List.generate(data.length, (i) {
       return WordModel(
-          id: data[i]['id'],
-          eng: data[i]['eng'],
-          kor: data[i]['kor'],
-          level: data[i]['level']);
+        id: data[i]['id'],
+        eng: data[i]['eng'],
+        kor: data[i]['kor'],
+        level: data[i]['level'],
+        correct: data[i]['correct'],
+      );
     });
   }
 
@@ -190,10 +201,12 @@ class DatabaseService {
     final List<Map<String, dynamic>> data =
         await db.query('bomool', where: 'id=?', whereArgs: [id]);
     return WordModel(
-        id: data[0]['id'],
-        eng: data[0]['eng'],
-        kor: data[0]['kor'],
-        level: data[0]['level']);
+      id: data[0]['id'],
+      eng: data[0]['eng'],
+      kor: data[0]['kor'],
+      level: data[0]['level'],
+      correct: data[0]['correct'],
+    );
   }
 
   Future<WordModel> readWrongWord(int id) async {
@@ -201,10 +214,12 @@ class DatabaseService {
     final List<Map<String, dynamic>> data =
         await db.query('bomool', where: 'id=?', whereArgs: [id]);
     return WordModel(
-        id: data[0]['id'],
-        eng: data[0]['eng'],
-        kor: data[0]['kor'],
-        level: data[0]['level']);
+      id: data[0]['id'],
+      eng: data[0]['eng'],
+      kor: data[0]['kor'],
+      level: data[0]['level'],
+      correct: data[0]['correct'],
+    );
   }
 
   Future<bool> deleteBomoolWord(int id) async {
@@ -253,16 +268,16 @@ class DatabaseService {
     }
   }
 
-  Future<bool> updateLevelBomoolWord(WordModel word) async {
+  Future<bool> updateIsCorrectedWord(WordModel word) async {
     final Database db = await database;
-    Map<String, dynamic> level = {
-      'level': '보물',
+    Map<String, dynamic> correct = {
+      'correct': 1,
     };
 
     try {
       db.update(
-        'bomool',
-        level,
+        'words',
+        correct,
         where: 'id=?',
         whereArgs: [word.id],
       );
@@ -272,10 +287,11 @@ class DatabaseService {
     }
   }
 
-  Future<List<WordModel>> getRandomWords(String level, int count) async {
+  Future<List<WordModel>> getRandomWords(
+      String level, int count, String table) async {
     final Database db = await database;
     final List<Map<String, dynamic>> allWords = await databaseConfig()
-        .then((_) => db.query('words', where: 'level =?', whereArgs: [level]));
+        .then((_) => db.query(table, where: 'level =?', whereArgs: [level]));
 
     if (allWords.length < count) {
       return allWords.map((map) => WordModel.fromMap(map)).toList();

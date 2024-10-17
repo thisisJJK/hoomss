@@ -42,7 +42,7 @@ class HomeView extends StatelessWidget {
   GestureDetector word() {
     return GestureDetector(
       onTap: () {
-        Get.to(() => const WordView());
+        Get.to(() => WordView());
       },
       child: Container(
         width: 207,
@@ -70,7 +70,7 @@ class HomeView extends StatelessWidget {
   GestureDetector conversation() {
     return GestureDetector(
       onTap: () {
-        Get.to(() =>  ChatListView());
+        Get.to(() => ChatListView());
       },
       child: Container(
         width: 207,

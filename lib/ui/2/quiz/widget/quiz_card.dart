@@ -9,12 +9,10 @@ import 'package:hoomss/ui/2/quiz/quiz_view_model.dart';
 class QuizCard extends StatelessWidget {
   final WordModel word;
 
-  QuizCard({
+  const QuizCard({
     super.key,
     required this.word,
   });
-
-  final BomoolViewModel bomoolViewModel = Get.put(BomoolViewModel());
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +48,6 @@ class QuizCard extends StatelessWidget {
             if (wordList.isNotEmpty) {
               id = wordList.last.id + 1;
             }
-            
 
             Get.find<QuizViewModel>().databaseService.insertBomoolWord(
                   WordModel(
