@@ -37,37 +37,52 @@ class AddDialog extends StatelessWidget {
             TextField(
               controller: korController,
             ),
+            const SizedBox(
+              height: 25,
+            ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                //추가버튼
                 ElevatedButton(
                   onPressed: () {
-                    var wordList = Get.find<BomoolViewModel>().wordList;
-                    int id = 1;
-
-                    if (wordList.isNotEmpty) {
-                      id = wordList.last.id + 1;
+                    if (engController.text == '' || korController.text == '') {
+                      Get.back();
+                      engController.text = '';
+                      korController.text = '';
                     }
+                    if (engController.text != '' && korController.text != '') {
+                      var wordList = Get.find<BomoolViewModel>().wordList;
+                      int id = 1;
 
-                    Get.find<BomoolViewModel>()
-                        .databaseService
-                        .insertBomoolWord(WordModel(
-                          id: id,
-                          eng: engController.text,
-                          kor: korController.text,
-                          level: ModeType.bomool.toKo,
-                        ))
-                        .then((result) {
-                      if (result) {
-                        Get.find<BomoolViewModel>().readBomoolWordList();
-
-                        Get.back();
-                        engController.text = '';
-                        korController.text = '';
+                      if (wordList.isNotEmpty) {
+                        id = wordList.last.id + 1;
                       }
-                    });
+                      Get.find<BomoolViewModel>()
+                          .databaseService
+                          .insertBomoolWord(WordModel(
+                            id: id,
+                            eng: engController.text,
+                            kor: korController.text,
+                            level: ModeType.bomool.toKo,
+                          ))
+                          .then((result) {
+                        if (result) {
+                          Get.find<BomoolViewModel>().readBomoolWordList();
+
+                          Get.back();
+                          engController.text = '';
+                          korController.text = '';
+                        }
+                      });
+                    }
                   },
                   child: const Text('추가'),
                 ),
+                const SizedBox(
+                  width: 10,
+                ),
+                //취소버튼
                 ElevatedButton(
                   onPressed: () {
                     engController.text = '';

@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            hoomssTitle(48),
+            hoomssTitle(48, context),
             const SizedBox(
               height: 45,
             ),

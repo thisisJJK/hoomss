@@ -1,11 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoomss/common/widget/hoomss_title.dart';
+import 'package:hoomss/data/database_service.dart';
 import 'package:hoomss/ui/1/chat_list/chat_list_view.dart';
 import 'package:hoomss/ui/2/word/word_view.dart';
+import 'package:hoomss/ui/2/word/word_view_model.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final DatabaseService databaseService = DatabaseService();
+  final WordViewModel wordViewModel = Get.put(WordViewModel());
+
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    _loadInitData();
+
+    super.initState();
+  }
+
+  Future<void> _loadInitData() async {
+    await wordViewModel.loadData();
+
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,52 +41,58 @@ class HomeView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            hoomssTitle(48),
+            hoomssTitle(48, context),
             const SizedBox(
               height: 55,
             ),
 
-            const Text(
+            Text(
               '흐흐.. 훔치고 싶은게 뭐야?',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w900,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
             const SizedBox(
               height: 55,
             ),
 
             //conversation view
-            conversation(),
+            conversation(context),
             const SizedBox(
               height: 40,
             ),
-            word()
+            word(context)
           ],
         ),
       ),
     );
   }
 
-  GestureDetector word() {
+  GestureDetector word(context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => WordView());
+        isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Get.to(() => WordView());
       },
       child: Container(
         width: 207,
         height: 100,
-        decoration: const BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.all(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          borderRadius: const BorderRadius.all(
             Radius.circular(20),
           ),
         ),
-        child: const Center(
+        child: Center(
           child: Text(
             '단어',
             style: TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.w900,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
           ),
         ),
@@ -67,7 +100,7 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  GestureDetector conversation() {
+  GestureDetector conversation(context) {
     return GestureDetector(
       onTap: () {
         Get.to(() => ChatListView());
@@ -75,19 +108,19 @@ class HomeView extends StatelessWidget {
       child: Container(
         width: 207,
         height: 100,
-        decoration: const BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.all(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          borderRadius: const BorderRadius.all(
             Radius.circular(20),
           ),
         ),
-        child: const Center(
+        child: Center(
           child: Text(
             '회화',
             style: TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.w900,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
           ),
         ),

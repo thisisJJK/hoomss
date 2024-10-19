@@ -18,30 +18,28 @@ class WordView extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
         child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Obx(() {
-            wordViewModel.onInit();
-
-            return Column(
+            scrollDirection: Axis.vertical,
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 //보물 단어장
-                ModeCard(
-                  mode: ModeType.bomool.toKo,
-                  icon: Icons.diamond_outlined,
-count: wordViewModel.bomoolCount.value,
-                  onTap: () {
-                    Get.to(() => BomoolView());
-                  },
-                ),
+               ModeCard(
+                    mode: ModeType.bomool.toKo,
+                    icon: Icons.diamond_outlined,
+                    count: wordViewModel.bomoolCount,
+                    onTap: () {
+                      Get.to(() => BomoolView());
+                    },
+                  ),
+               
                 const SizedBox(height: 12),
 
                 //오답노답
                 ModeCard(
                   mode: ModeType.wrong.toKo,
                   icon: FeatherIcons.meh,
-count: wordViewModel.wrongCount.value,
+                  count: wordViewModel.wrongCount,
                   onTap: () {
                     Get.to(() => WrongView());
                   },
@@ -51,8 +49,6 @@ count: wordViewModel.wrongCount.value,
                 //기초
                 ModeCard(
                   mode: ModeType.basic.toKo,
-
-
                   onTap: () {
                     Get.to(() => QuizView(
                           mode: ModeType.basic.toKo,
@@ -65,8 +61,6 @@ count: wordViewModel.wrongCount.value,
                 //수능
                 ModeCard(
                   mode: ModeType.koreaTest.toKo,
-
-
                   onTap: () {
                     Get.to(() => QuizView(
                           mode: ModeType.koreaTest.toKo,
@@ -79,8 +73,6 @@ count: wordViewModel.wrongCount.value,
                 //토익
                 ModeCard(
                   mode: ModeType.toeic.toKo,
-
-
                   onTap: () {
                     Get.to(() => QuizView(
                           mode: ModeType.toeic.toKo,
@@ -89,9 +81,7 @@ count: wordViewModel.wrongCount.value,
                   },
                 ),
               ],
-            );
-          }),
-        ),
+            )),
       ),
     );
   }

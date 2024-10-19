@@ -4,30 +4,76 @@ import 'package:hoomss/data/word/word_data_type.dart';
 import 'package:hoomss/data/word/word_model.dart';
 
 class WordViewModel extends GetxController {
-  @override
-  void onInit() {
-    readBomoolWordList();
-    readWrongWordList();
-    readBasicWordList();
-    readKtestWordList();
-    readToeicWordList();
-    setCount();
-
-    super.onInit();
-  }
-
   final DatabaseService databaseService = Get.put(DatabaseService());
+
+  Future<void> loadData() async {
+    Future<bool> isLoaded() async {
+      await readBasicWordTotalList();
+      await readKtestWordTotalList();
+      await readToeicWordTotalList();
+      await readBomoolWordList();
+      await readWrongWordList();
+      await readBasicWordList();
+      await readKtestWordList();
+      await readToeicWordList();
+      return true;
+    }
+
+    isLoaded().then((result) {
+      if (result) setCount();
+    });
+  }
 
 //기초, 수능, 토익 총 갯수
   int total(String mode) {
     int totalCount;
     mode == ModeType.basic.toKo
-        ? totalCount = 50 //기초단어
+        ? totalCount = totalBasicList.length //기초단어
         : mode == ModeType.koreaTest.toKo
-            ? totalCount = 50 //수능단어
-            : totalCount = 50; //토익단어
+            ? totalCount = totalKtestList.length //수능단어
+            : totalCount = totalToeicList.length; //토익단어
 
     return totalCount;
+  }
+
+  var totalBasicList = <WordModel>[].obs;
+  var totalKtestList = <WordModel>[].obs;
+  var totalToeicList = <WordModel>[].obs;
+
+  Future<List<WordModel>> readBasicWordTotalList() async {
+    var allWords = await databaseService
+        .databaseConfig()
+        .then((_) => databaseService.readWords());
+    totalBasicList.value = allWords
+        .where((words) => words.level == ModeType.basic.toKo)
+        .map((words) => words)
+        .toList();
+
+    return totalBasicList;
+  }
+
+  Future<List<WordModel>> readKtestWordTotalList() async {
+    var allWords = await databaseService
+        .databaseConfig()
+        .then((_) => databaseService.readWords());
+    totalKtestList.value = allWords
+        .where((words) => words.level == ModeType.koreaTest.toKo)
+        .map((words) => words)
+        .toList();
+
+    return totalKtestList;
+  }
+
+  Future<List<WordModel>> readToeicWordTotalList() async {
+    var allWords = await databaseService
+        .databaseConfig()
+        .then((_) => databaseService.readWords());
+    totalToeicList.value = allWords
+        .where((words) => words.level == ModeType.toeic.toKo)
+        .map((words) => words)
+        .toList();
+
+    return totalToeicList;
   }
 
 //단어 리스트
@@ -55,16 +101,16 @@ class WordViewModel extends GetxController {
 
 //mode card 카운트함수
   int currentCount(mode) {
-    int currentCount = 0;
+    var currentCount = 0;
     if (mode == ModeType.basic.toKo) {
-      currentCount = wordBasicList.length;
+      currentCount = basicCount.value;
     }
     if (mode == ModeType.koreaTest.toKo) {
-      currentCount = wordKtestList.length;
+      currentCount = kTestCount.value;
     }
 
     if (mode == ModeType.toeic.toKo) {
-      currentCount = wordToeicList.length;
+      currentCount = toeicCount.value;
     }
     return currentCount;
   }
@@ -74,6 +120,11 @@ class WordViewModel extends GetxController {
     double currentPercent = (total(mode) - currentCount(mode)) / total(mode);
 
     return currentPercent;
+  }
+
+  double percent100(mode) {
+    double percent100 = percent(mode) * 100;
+    return percent100;
   }
 
 //모드별 현재 남은 단어 리스트

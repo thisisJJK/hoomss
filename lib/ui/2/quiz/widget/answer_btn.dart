@@ -31,7 +31,9 @@ class AnswerBtn extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 24,
-                color: isSame.value ? Colors.black : Colors.transparent,
+                color: isSame.value
+                    ? Theme.of(context).colorScheme.onSurface
+                    : Colors.transparent,
               ),
             ),
           ),

@@ -65,11 +65,32 @@ class DatabaseService {
   Future<bool> _insertInitData(Database db) async {
     try {
       //word
-      List<Map<String, dynamic>> words = wordData();
+      Data data = Data();
+      data.wordData();
+      List<Map<String, dynamic>> basic = data.basic;
+      List<Map<String, dynamic>> kTest = data.kTest;
+      List<Map<String, dynamic>> toeic = data.toeic;
 
-      for (var word in words) {
-        await db.insert('words', word);
-      }
+      await db.transaction((t) async {
+        Batch batch = t.batch();
+        for (var word in basic) {
+          batch.insert('words', word);
+        }
+        for (var word in kTest) {
+          batch.insert('words', word);
+        }
+        for (var word in toeic) {
+          batch.insert('words', word);
+        }
+
+        await batch.commit(noResult: true);
+      });
+
+      // Batch batch = db.batch();
+      // for (var word in words) {
+      //   batch.insert('words', word);
+      // }
+      // await batch.commit(noResult: true);
 
       return true;
     } catch (err) {
@@ -171,6 +192,7 @@ class DatabaseService {
   Future<List<WordModel>> readBomoolWords() async {
     final Database db = await database;
     final List<Map<String, dynamic>> data = await db.query('bomool');
+
 
     return List.generate(data.length, (i) {
       return WordModel(
@@ -290,6 +312,7 @@ class DatabaseService {
   Future<List<WordModel>> getRandomWords(
       String level, int count, String table) async {
     final Database db = await database;
+
     final List<Map<String, dynamic>> allWords = await databaseConfig()
         .then((_) => db.query(table, where: 'level =?', whereArgs: [level]));
 

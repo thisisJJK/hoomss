@@ -15,7 +15,7 @@ class ChatListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appbar(),
+      appBar: appbar(context),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
         child: Column(
@@ -57,10 +57,6 @@ class ChatListView extends StatelessWidget {
               leading: const CircleAvatar(),
               title: Text(chatListViewModel.filterChats[index].situation),
               subtitle: const Text('description'),
-              trailing: const Icon(
-                FeatherIcons.check,
-                color: Colors.green,
-              ),
             ),
           );
         },
@@ -88,7 +84,7 @@ class ChatListView extends StatelessWidget {
     );
   }
 
-  AppBar appbar() {
+  AppBar appbar(context) {
     return AppBar(
       centerTitle: true,
       leading: Padding(
@@ -102,7 +98,7 @@ class ChatListView extends StatelessWidget {
               size: 32,
             )),
       ),
-      title: hoomssTitle(30),
+      title: hoomssTitle(30, context),
       actions: [
         Padding(
             padding: const EdgeInsets.only(right: 20),

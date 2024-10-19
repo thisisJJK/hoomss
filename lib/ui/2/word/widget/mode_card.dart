@@ -6,7 +6,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class ModeCard extends StatelessWidget {
   final String mode;
-  final int? count;
+  final RxInt? count;
   final IconData? icon;
 
   final Function() onTap;
@@ -21,81 +21,76 @@ class ModeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double percent = Get.find<WordViewModel>().percent(mode);
-    double percent100 = percent * 100;
     bool isBomoolWrong =
         mode == ModeType.bomool.toKo || mode == ModeType.wrong.toKo;
     return GestureDetector(
       onTap: onTap,
       child: Container(
-          height: 110,
-          padding: const EdgeInsets.fromLTRB(25, 20, 20, 20),
-          decoration: BoxDecoration(
-            color: Colors.black12,
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Row(
+        height: 110,
+        padding: const EdgeInsets.fromLTRB(25, 5, 20, 5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: Theme.of(context).colorScheme.secondaryContainer,
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Obx(() {
+              return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     mode,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 30,
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
                     ),
                   ),
                   const Spacer(),
 
                   isBomoolWrong
-                      ? Text('$count 개')
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '전체단어  ${Get.find<WordViewModel>().total(mode)}',
-                              style: const TextStyle(
-                                fontSize: 12,
-                              ),
-                            ),
-                            Text(
-                              '남은단어  ${Get.find<WordViewModel>().currentCount(mode)}',
-                              style: const TextStyle(
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
+                      ? Text('${count!.value} 개')
+                      : Text(
+                          '남은단어 : ${Get.find<WordViewModel>().currentCount(mode)}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                          ),
                         ),
 
                   //진행률
-                  const SizedBox(width: 15),
+                  const SizedBox(width: 25),
 
                   Icon(
                     icon,
                     size: 68,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
                   ),
                 ],
-              ),
-              //퍼센트 게이지
-              if (!isBomoolWrong)
-                Align(
+              );
+            }),
+
+            //퍼센트 게이지
+            if (!isBomoolWrong)
+              Obx(
+                () => Align(
                   alignment: Alignment.centerRight,
                   child: CircularPercentIndicator(
-                    radius: 35,
-                    percent: percent,
+                    radius: 38,
+                    percent: Get.find<WordViewModel>().percent(mode),
                     lineWidth: 10,
                     animation: true,
-                    center: Text('${percent100.toStringAsFixed(1)}%'),
+                    center: Text(
+                        '${Get.find<WordViewModel>().percent100(mode).toStringAsFixed(1)}%'),
                     circularStrokeCap: CircularStrokeCap.round,
-                    progressColor: Colors.green,
+                    progressColor: Theme.of(context).colorScheme.primary,
                   ),
-                )
-            ],
-          )),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }

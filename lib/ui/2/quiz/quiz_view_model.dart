@@ -7,7 +7,7 @@ import 'package:hoomss/data/word/word_data_type.dart';
 import 'package:hoomss/data/word/word_model.dart';
 
 class QuizViewModel extends GetxController {
-  int count = 5; // 문제 갯수
+  int count = 20; // 문제 갯수
 
   int incorrectCount = 0;
 
@@ -145,7 +145,4 @@ class QuizViewModel extends GetxController {
       ),
     );
   }
-
-
-
 }

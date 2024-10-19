@@ -9,6 +9,7 @@ import 'package:hoomss/ui/2/quiz/quiz_view_model.dart';
 import 'package:hoomss/ui/2/quiz/widget/answer_btn.dart';
 import 'package:hoomss/ui/2/quiz/widget/answer_field.dart';
 import 'package:hoomss/ui/2/quiz/widget/quiz_card.dart';
+import 'package:hoomss/ui/2/word/word_view_model.dart';
 import 'package:hoomss/ui/2/wrong_book/wrong_view_model.dart';
 
 class QuizView extends StatelessWidget {
@@ -24,6 +25,7 @@ class QuizView extends StatelessWidget {
   final QuizViewModel quizViewModel = Get.put(QuizViewModel());
   final BomoolViewModel bomoolViewModel = Get.put(BomoolViewModel());
   final WrongViewModel wrongViewModel = Get.put(WrongViewModel());
+  final WordViewModel wordViewModel = Get.put(WordViewModel());
 
   final TextEditingController controller = TextEditingController();
 
@@ -41,7 +43,12 @@ class QuizView extends StatelessWidget {
           if (quizViewModel.questions.isEmpty ||
               quizViewModel.choices.isEmpty) {
             return const Center(
-              child: Text('나만의 단어로 퀴즈를 풀어보세요'),
+              child: Text(
+                '나만의 단어로 퀴즈를 풀어보세요',
+                style: TextStyle(
+                  fontSize: 21,
+                ),
+              ),
             );
           }
           var currentWord =
@@ -79,6 +86,8 @@ class QuizView extends StatelessWidget {
                         quizViewModel.isCorrect.value = true;
                         quizViewModel.databaseService
                             .updateIsCorrectedWord(currentWord);
+                        wordViewModel.loadData();
+
                         controller.clear();
                         Timer(const Duration(milliseconds: 444), () {
                           quizViewModel.isSame.value = false;
@@ -93,6 +102,7 @@ class QuizView extends StatelessWidget {
 
                         quizViewModel.databaseService
                             .insertWrongWord(currentWord);
+                        wordViewModel.loadData();
                         if (mode != ModeType.bomool.toKo) {
                           quizViewModel.databaseService
                               .deleteWord(currentWord.id);
@@ -127,6 +137,7 @@ class QuizView extends StatelessWidget {
                         quizViewModel.isCorrect.value = true;
                         quizViewModel.databaseService
                             .updateIsCorrectedWord(currentWord);
+                        wordViewModel.loadData();
                         Timer(
                           const Duration(milliseconds: 444),
                           () {
@@ -145,7 +156,7 @@ class QuizView extends StatelessWidget {
 
                         quizViewModel.databaseService
                             .insertWrongWord(currentWord);
-
+                        wordViewModel.loadData();
                         if (mode != ModeType.bomool.toKo) {
                           quizViewModel.databaseService
                               .deleteWord(currentWord.id);

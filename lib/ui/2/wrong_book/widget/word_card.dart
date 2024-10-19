@@ -15,7 +15,7 @@ class WordCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.black12,
+        color: Theme.of(context).colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(20),
       ),
       padding: const EdgeInsets.only(left: 0, right: 0, bottom: 10),
@@ -48,9 +48,10 @@ class WordCard extends StatelessWidget {
               wordModel.eng,
               maxLines: 1,
               minFontSize: 10,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 28,
+                color: Theme.of(context).colorScheme.onSecondaryContainer,
               ),
             ),
           ),
@@ -61,9 +62,10 @@ class WordCard extends StatelessWidget {
               minFontSize: 10,
               maxLines: 2,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 20,
+                color: Theme.of(context).colorScheme.onSecondaryContainer,
               ),
             ),
           ),

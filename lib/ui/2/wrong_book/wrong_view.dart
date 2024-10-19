@@ -3,13 +3,15 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:hoomss/data/word/word_data_type.dart';
 import 'package:hoomss/data/word/word_model.dart';
+import 'package:hoomss/ui/2/word/word_view_model.dart';
 import 'package:hoomss/ui/2/wrong_book/widget/word_card.dart';
 import 'package:hoomss/ui/2/wrong_book/wrong_view_model.dart';
 
 class WrongView extends StatelessWidget {
   WrongView({super.key});
 
-  final WrongViewModel wrongViewModel = Get.put(WrongViewModel());
+  final WrongViewModel _wrongViewModel = Get.put(WrongViewModel());
+  final WordViewModel _wordViewModel = Get.put(WordViewModel());
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +23,18 @@ class WrongView extends StatelessWidget {
 
   Obx body() {
     return Obx(() {
-      if (wrongViewModel.isLoading.value) {
+      if (_wrongViewModel.isLoading.value) {
         return const Center(
           child: CircularProgressIndicator(),
         );
-      } else if (wrongViewModel.wordList.isEmpty) {
+      } else if (_wrongViewModel.wordList.isEmpty) {
         return const Center(
-          child: Text('Perfect'),
+          child: Text(
+            '✨완벽완벽✨',
+            style: TextStyle(
+              fontSize: 21,
+            ),
+          ),
         );
       }
       return GridView.builder(
@@ -38,10 +45,12 @@ class WrongView extends StatelessWidget {
             crossAxisCount: 2,
             childAspectRatio: 1.5,
           ),
-          itemCount: wrongViewModel.wordList.length,
+          itemCount: _wrongViewModel.wordList.length,
           itemBuilder: (BuildContext context, int index) {
-            WordModel word = wrongViewModel.wordList[index];
-            return WordCard(wordModel: word,);
+            WordModel word = _wrongViewModel.wordList[index];
+            return WordCard(
+              wordModel: word,
+            );
           });
     });
   }
@@ -66,6 +75,7 @@ class WrongView extends StatelessWidget {
         padding: const EdgeInsets.only(left: 20),
         child: IconButton(
           onPressed: () {
+            _wordViewModel.loadData();
             Get.back();
           },
           icon: const Icon(

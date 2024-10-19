@@ -8,29 +8,34 @@ import 'package:hoomss/ui/2/bomool_book/widget/add_dialog.dart';
 import 'package:hoomss/ui/2/bomool_book/widget/edit_dialog.dart';
 import 'package:hoomss/ui/2/bomool_book/widget/word_card.dart';
 import 'package:hoomss/ui/2/quiz/quiz_view.dart';
+import 'package:hoomss/ui/2/word/word_view_model.dart';
 
 class BomoolView extends StatelessWidget {
   BomoolView({super.key});
 
   final BomoolViewModel _bomoolViewModel = Get.put(BomoolViewModel());
+  final WordViewModel _wordViewModel = Get.put(WordViewModel());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appbar(context),
       body: body(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.to(
-            () => QuizView(
-              mode: ModeType.bomool.toKo,
-              level: ModeType.bomool.toKo,
+      floatingActionButton: floatinActionBtn(),
+    );
+  }
 
-            ),
-          );
-        },
-        child: const Icon(FeatherIcons.play),
-      ),
+  FloatingActionButton floatinActionBtn() {
+    return FloatingActionButton(
+      onPressed: () {
+        Get.to(
+          () => QuizView(
+            mode: ModeType.bomool.toKo,
+            level: ModeType.bomool.toKo,
+          ),
+        );
+      },
+      child: const Icon(FeatherIcons.play),
     );
   }
 
@@ -101,6 +106,7 @@ class BomoolView extends StatelessWidget {
         padding: const EdgeInsets.only(left: 20),
         child: IconButton(
           onPressed: () {
+            _wordViewModel.loadData();
             Get.back();
           },
           icon: const Icon(
