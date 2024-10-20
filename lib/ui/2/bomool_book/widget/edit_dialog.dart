@@ -39,7 +39,11 @@ class EditDialog extends StatelessWidget {
                     TextField(
                       controller: korController,
                     ),
+                    const SizedBox(
+                      height: 25,
+                    ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ElevatedButton(
                           onPressed: () {
@@ -64,6 +68,9 @@ class EditDialog extends StatelessWidget {
                             });
                           },
                           child: const Text('수정'),
+                        ),
+                        const SizedBox(
+                          width: 10,
                         ),
                         ElevatedButton(
                           onPressed: () {

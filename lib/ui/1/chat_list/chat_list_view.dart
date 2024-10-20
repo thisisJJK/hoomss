@@ -43,10 +43,11 @@ class ChatListView extends StatelessWidget {
         );
       }
 
-      return ListView.builder(
+      return ListView.separated(
+        separatorBuilder: (context, index) => const Divider(),
         itemCount: chatListViewModel.filterChats.length,
         itemBuilder: (BuildContext context, int index) {
-          return Card(
+          return Center(
             child: ListTile(
               onTap: () {
                 final filterChat = chatListViewModel.filterChats[index];
@@ -54,9 +55,12 @@ class ChatListView extends StatelessWidget {
                       chat: filterChat,
                     ));
               },
-              leading: const CircleAvatar(),
-              title: Text(chatListViewModel.filterChats[index].situation),
-              subtitle: const Text('description'),
+              title:
+                  Text('✨  ${chatListViewModel.filterChats[index].situation}'),
+              titleTextStyle: TextStyle(
+                fontSize: 21,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
           );
         },

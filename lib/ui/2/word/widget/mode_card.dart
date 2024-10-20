@@ -7,6 +7,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 class ModeCard extends StatelessWidget {
   final String mode;
   final RxInt? count;
+  final RxDouble? percent;
   final IconData? icon;
 
   final Function() onTap;
@@ -17,6 +18,7 @@ class ModeCard extends StatelessWidget {
     this.icon,
     required this.onTap,
     this.count,
+    this.percent,
   });
 
   @override
@@ -53,7 +55,7 @@ class ModeCard extends StatelessWidget {
                   isBomoolWrong
                       ? Text('${count!.value} 개')
                       : Text(
-                          '남은단어 : ${Get.find<WordViewModel>().currentCount(mode)}',
+                          '남은단어 : $count',
                           style: const TextStyle(
                             fontSize: 12,
                           ),
@@ -73,20 +75,21 @@ class ModeCard extends StatelessWidget {
 
             //퍼센트 게이지
             if (!isBomoolWrong)
-              Obx(
-                () => Align(
-                  alignment: Alignment.centerRight,
-                  child: CircularPercentIndicator(
+              Align(
+                alignment: Alignment.centerRight,
+                child: Obx(() {
+                  Get.find<WordViewModel>().percent(mode);
+                  double percent100 = percent! * 100;
+                  return CircularPercentIndicator(
                     radius: 38,
-                    percent: Get.find<WordViewModel>().percent(mode),
+                    percent: percent!.value,
                     lineWidth: 10,
                     animation: true,
-                    center: Text(
-                        '${Get.find<WordViewModel>().percent100(mode).toStringAsFixed(1)}%'),
+                    center: Text('${percent100.toStringAsFixed(1)}%'),
                     circularStrokeCap: CircularStrokeCap.round,
                     progressColor: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
+                  );
+                }),
               ),
           ],
         ),
@@ -94,3 +97,6 @@ class ModeCard extends StatelessWidget {
     );
   }
 }
+
+@override
+void initState(mode) {}

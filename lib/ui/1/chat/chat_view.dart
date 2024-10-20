@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:hoomss/data/chat/chat_model.dart';
 import 'package:hoomss/ui/1/chat/chat_view_model.dart';
 import 'package:hoomss/ui/1/chat/widget/bubble.dart';
+import 'package:hoomss/ui/2/bomool_book/bomool_view_model.dart';
+import 'package:hoomss/ui/2/bomool_book/widget/add_dialog.dart';
 
 class ChatView extends StatelessWidget {
   final ChatModel chat;
@@ -16,6 +18,8 @@ class ChatView extends StatelessWidget {
         chatModel: chat,
       ),
     );
+
+    Get.put(BomoolViewModel());
   }
 
   @override
@@ -65,12 +69,16 @@ class ChatView extends StatelessWidget {
                       return const SizedBox(height: 10);
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      final String bubble =
+                      final String engBubble =
                           Get.find<ChatViewModel>().currentChats[index].content;
-                      final int count = index;
+                      final String korBubble = Get.find<ChatViewModel>()
+                          .currentChats[index]
+                          .translation;
+                    
                       return Bubble(
-                        bubble: bubble,
-                        count: count,
+                        eng: engBubble,
+                        kor: korBubble,
+                        index: index,
                       );
                     },
                   ),
@@ -106,7 +114,20 @@ class BottomInputField extends StatelessWidget {
           children: [
             IconButton(
               icon: const Icon(FeatherIcons.edit),
-              onPressed: () {},
+              onPressed: () {
+                TextEditingController engController =
+                    Get.find<BomoolViewModel>().engController;
+                TextEditingController korController =
+                    Get.find<BomoolViewModel>().korController;
+
+                showDialog(
+                  context: context,
+                  builder: (context) => AddDialog(
+                    engController: engController,
+                    korController: korController,
+                  ),
+                );
+              },
             ),
             Expanded(
               child: TextField(
@@ -116,7 +137,7 @@ class BottomInputField extends StatelessWidget {
                 maxLines: null,
                 textAlignVertical: TextAlignVertical.top,
                 decoration: InputDecoration(
-                  hintText: '따라써보세요',
+                  hintText: '따라서 쓰고 문장을 훔쳐봐',
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.only(
                     right: 42,
@@ -139,8 +160,12 @@ class BottomInputField extends StatelessWidget {
                 if (Get.find<ChatViewModel>()
                         .currentChats[
                             Get.find<ChatViewModel>().currentIndex.value]
-                        .content ==
-                    Get.find<ChatViewModel>().textEditingController.text) {
+                        .content
+                        .toLowerCase() ==
+                    Get.find<ChatViewModel>()
+                        .textEditingController
+                        .text
+                        .toLowerCase()) {
                   Get.find<ChatViewModel>().onSubmitted(
                       Get.find<ChatViewModel>().textEditingController.text);
 

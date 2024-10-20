@@ -25,7 +25,9 @@ class DifficultyBtn extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: isSelected ? Colors.black87 : Colors.black12,
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.secondaryContainer,
           borderRadius: BorderRadius.circular(15),
         ),
         width: 120,
@@ -34,10 +36,11 @@ class DifficultyBtn extends StatelessWidget {
           child: Text(
             difficulty.toKo,
             style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-              color: isSelected ? Colors.white : Colors.black87,
-            ),
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.onPrimary
+                    : Theme.of(context).colorScheme.onSecondaryContainer),
           ),
         ),
       ),

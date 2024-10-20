@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoomss/common/widget/hoomss_title.dart';
 import 'package:hoomss/data/database_service.dart';
+import 'package:hoomss/data/word/word_data_type.dart';
 import 'package:hoomss/ui/1/chat_list/chat_list_view.dart';
 import 'package:hoomss/ui/2/word/word_view.dart';
 import 'package:hoomss/ui/2/word/word_view_model.dart';
@@ -16,23 +17,6 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final DatabaseService databaseService = DatabaseService();
   final WordViewModel wordViewModel = Get.put(WordViewModel());
-
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    _loadInitData();
-
-    super.initState();
-  }
-
-  Future<void> _loadInitData() async {
-    await wordViewModel.loadData();
-
-    setState(() {
-      isLoading = false;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,9 +57,12 @@ class _HomeViewState extends State<HomeView> {
   GestureDetector word(context) {
     return GestureDetector(
       onTap: () {
-        isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Get.to(() => WordView());
+        wordViewModel.loadData();
+        wordViewModel.percent(ModeType.basic.toKo);
+        wordViewModel.percent(ModeType.koreaTest.toKo);
+        wordViewModel.percent(ModeType.toeic.toKo);
+
+        Get.to(() => WordView());
       },
       child: Container(
         width: 207,

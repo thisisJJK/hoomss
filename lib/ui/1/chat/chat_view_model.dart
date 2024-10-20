@@ -8,6 +8,7 @@ class ChatViewModel extends GetxController {
 
   var currentIndex = 0.obs;
   var isLast = false.obs;
+  var isEng = true.obs;
 
   final ChatModel chatModel;
 
@@ -23,8 +24,11 @@ class ChatViewModel extends GetxController {
 
   bool get isTextFieldEnable => textEditingController.text.isNotEmpty;
 
-  void onSubmitted(String text) {
+  void changeBubble() {
+    isEng.value ? isEng.value = false : isEng.value = true;
+  }
 
+  void onSubmitted(String text) {
     if (!isTextFieldEnable) return;
 
     if (currentIndex.value < chatModel.conversations.length - 1) {
@@ -33,12 +37,11 @@ class ChatViewModel extends GetxController {
     }
 
     if (currentIndex.value == chatModel.conversations.length - 1 &&
-        text == currentChats[currentIndex.value].content) {
+        text.toLowerCase() ==
+            currentChats[currentIndex.value].content.toLowerCase()) {
       isLast.value = true;
       showEnd();
     }
-
-   
 
     textEditingController.text = '';
   }

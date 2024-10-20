@@ -103,6 +103,8 @@ class QuizView extends StatelessWidget {
                         quizViewModel.databaseService
                             .insertWrongWord(currentWord);
                         wordViewModel.loadData();
+                        wordViewModel.setWrongCountByMode(mode);
+
                         if (mode != ModeType.bomool.toKo) {
                           quizViewModel.databaseService
                               .deleteWord(currentWord.id);
@@ -157,6 +159,7 @@ class QuizView extends StatelessWidget {
                         quizViewModel.databaseService
                             .insertWrongWord(currentWord);
                         wordViewModel.loadData();
+                        wordViewModel.setWrongCountByMode(mode);
                         if (mode != ModeType.bomool.toKo) {
                           quizViewModel.databaseService
                               .deleteWord(currentWord.id);

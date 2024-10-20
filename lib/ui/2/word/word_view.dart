@@ -13,6 +13,10 @@ class WordView extends StatelessWidget {
   final WordViewModel wordViewModel = Get.put(WordViewModel());
   @override
   Widget build(BuildContext context) {
+    wordViewModel.percent(ModeType.basic.toKo);
+    wordViewModel.percent(ModeType.koreaTest.toKo);
+    wordViewModel.percent(ModeType.toeic.toKo);
+
     return Scaffold(
       appBar: appbar(),
       body: Padding(
@@ -24,15 +28,15 @@ class WordView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 //보물 단어장
-               ModeCard(
-                    mode: ModeType.bomool.toKo,
-                    icon: Icons.diamond_outlined,
-                    count: wordViewModel.bomoolCount,
-                    onTap: () {
-                      Get.to(() => BomoolView());
-                    },
-                  ),
-               
+                ModeCard(
+                  mode: ModeType.bomool.toKo,
+                  icon: Icons.diamond_outlined,
+                  count: wordViewModel.bomoolCount,
+                  onTap: () {
+                    Get.to(() => BomoolView());
+                  },
+                ),
+
                 const SizedBox(height: 12),
 
                 //오답노답
@@ -49,6 +53,8 @@ class WordView extends StatelessWidget {
                 //기초
                 ModeCard(
                   mode: ModeType.basic.toKo,
+                  count: wordViewModel.basicCount,
+                  percent: wordViewModel.currentPercent1,
                   onTap: () {
                     Get.to(() => QuizView(
                           mode: ModeType.basic.toKo,
@@ -61,6 +67,8 @@ class WordView extends StatelessWidget {
                 //수능
                 ModeCard(
                   mode: ModeType.koreaTest.toKo,
+                  count: wordViewModel.kTestCount,
+                  percent: wordViewModel.currentPercent2,
                   onTap: () {
                     Get.to(() => QuizView(
                           mode: ModeType.koreaTest.toKo,
@@ -73,6 +81,8 @@ class WordView extends StatelessWidget {
                 //토익
                 ModeCard(
                   mode: ModeType.toeic.toKo,
+                  count: wordViewModel.toeicCount,
+                  percent: wordViewModel.currentPercent3,
                   onTap: () {
                     Get.to(() => QuizView(
                           mode: ModeType.toeic.toKo,

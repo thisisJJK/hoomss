@@ -49,11 +49,13 @@ class ChatModel {
 class ConversationModel {
   // final int id;
   final String content;
+  final String translation;
   final ChatType type; // 'sent' 또는 'received'
 
   ConversationModel({
     // required this.id,
     required this.content,
+    required this.translation,
     required this.type,
   });
 
@@ -71,6 +73,7 @@ class ConversationModel {
     return ConversationModel(
       // id: map['id'],
       content: map['content'],
+      translation: map['translation'],
       type: _chatTypeHelper(map['type']),
     );
   }
@@ -82,6 +85,6 @@ class ConversationModel {
 
   @override
   String toString() {
-    return 'ConversationModel{ content: $content, type: $type}';
+    return 'ConversationModel{ content: $content,translation :$translation, type: $type}';
   }
 }
