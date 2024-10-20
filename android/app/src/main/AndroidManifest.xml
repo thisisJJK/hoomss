@@ -42,4 +42,11 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+         <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="{ca-app-pub-7607859450565086~3826858151}"
+            />
+    </application>
+
+
 </manifest>

@@ -90,7 +90,7 @@ class _HomeViewState extends State<HomeView> {
   GestureDetector conversation(context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => ChatListView());
+        Get.to(() => const ChatListView());
       },
       child: Container(
         width: 207,

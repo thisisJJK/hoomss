@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:hoomss/admob/ad_helper.dart';
 import 'package:hoomss/common/widget/hoomss_title.dart';
 import 'package:hoomss/data/chat/chat_data_type.dart';
 import 'package:hoomss/ui/1/chat/chat_view.dart';
@@ -8,9 +10,40 @@ import 'package:hoomss/ui/1/chat_list/chat_list_view_model.dart';
 import 'package:hoomss/ui/1/chat_list/widget/difficulty_btn.dart';
 import 'package:hoomss/ui/2/word/word_view.dart';
 
-class ChatListView extends StatelessWidget {
-  ChatListView({super.key});
+class ChatListView extends StatefulWidget {
+  const ChatListView({super.key});
+
+  @override
+  State<ChatListView> createState() => _ChatListViewState();
+}
+
+class _ChatListViewState extends State<ChatListView> {
   final ChatListViewModel chatListViewModel = Get.put(ChatListViewModel());
+  BannerAd? _bannerAd;
+  bool _isBannerReady = false;
+
+  @override
+  void initState() {
+    adHelper().configureAdSettings(
+      (ad) => {
+        if (_bannerAd == null)
+          {
+            setState(() {
+              _bannerAd = ad;
+              _isBannerReady = true;
+            })
+          }
+      },
+      BannerType.small,
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    adHelper().dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,21 +61,20 @@ class ChatListView extends StatelessWidget {
 
                   //대화방 목록
                   list(),
-
-                  //랜덤버튼
-
-                  //배너광고?
                 ],
               ),
             ),
           ),
-          SafeArea(
-            child: Container(
-              color: Colors.green,
-              width: 320,
-              height: 50,
-            ),
-          )
+
+          //배너 광고
+          if (_isBannerReady)
+            SafeArea(
+              child: SizedBox(
+                width: _bannerAd!.size.width.toDouble(),
+                height: _bannerAd!.size.height.toDouble(),
+                child: AdWidget(ad: _bannerAd!),
+              ),
+            )
         ],
       ),
     );
