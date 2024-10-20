@@ -14,7 +14,7 @@ class DatabaseService {
   DatabaseService._internal() {
     databaseConfig();
   }
-
+//db 설정
   Future<bool> databaseConfig() async {
     try {
       database = openDatabase(

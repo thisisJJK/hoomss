@@ -19,81 +19,100 @@ class WordView extends StatelessWidget {
 
     return Scaffold(
       appBar: appbar(),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-        child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                //보물 단어장
-                ModeCard(
-                  mode: ModeType.bomool.toKo,
-                  icon: Icons.diamond_outlined,
-                  count: wordViewModel.bomoolCount,
-                  onTap: () {
-                    Get.to(() => BomoolView());
-                  },
-                ),
+      body: Column(
+        children: [
+          wordList(),
 
-                const SizedBox(height: 12),
-
-                //오답노답
-                ModeCard(
-                  mode: ModeType.wrong.toKo,
-                  icon: FeatherIcons.meh,
-                  count: wordViewModel.wrongCount,
-                  onTap: () {
-                    Get.to(() => WrongView());
-                  },
-                ),
-                const SizedBox(height: 12),
-
-                //기초
-                ModeCard(
-                  mode: ModeType.basic.toKo,
-                  count: wordViewModel.basicCount,
-                  percent: wordViewModel.currentPercent1,
-                  onTap: () {
-                    Get.to(() => QuizView(
-                          mode: ModeType.basic.toKo,
-                          level: ModeType.basic.toKo,
-                        ));
-                  },
-                ),
-                const SizedBox(height: 12),
-
-                //수능
-                ModeCard(
-                  mode: ModeType.koreaTest.toKo,
-                  count: wordViewModel.kTestCount,
-                  percent: wordViewModel.currentPercent2,
-                  onTap: () {
-                    Get.to(() => QuizView(
-                          mode: ModeType.koreaTest.toKo,
-                          level: ModeType.koreaTest.toKo,
-                        ));
-                  },
-                ),
-                const SizedBox(height: 12),
-
-                //토익
-                ModeCard(
-                  mode: ModeType.toeic.toKo,
-                  count: wordViewModel.toeicCount,
-                  percent: wordViewModel.currentPercent3,
-                  onTap: () {
-                    Get.to(() => QuizView(
-                          mode: ModeType.toeic.toKo,
-                          level: ModeType.toeic.toKo,
-                        ));
-                  },
-                ),
-              ],
-            )),
+          //큰 광고
+          SafeArea(
+            child: Container(
+              color: Colors.green,
+              width: 320,
+              height: 100,
+            ),
+          )
+        ],
       ),
     );
+  }
+
+  Expanded wordList() {
+    return Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+            child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    //보물 단어장
+                    ModeCard(
+                      mode: ModeType.bomool.toKo,
+                      icon: Icons.diamond_outlined,
+                      count: wordViewModel.bomoolCount,
+                      onTap: () {
+                        Get.to(() => BomoolView());
+                      },
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    //오답노답
+                    ModeCard(
+                      mode: ModeType.wrong.toKo,
+                      icon: FeatherIcons.meh,
+                      count: wordViewModel.wrongCount,
+                      onTap: () {
+                        Get.to(() => WrongView());
+                      },
+                    ),
+                    const SizedBox(height: 12),
+
+                    //기초
+                    ModeCard(
+                      mode: ModeType.basic.toKo,
+                      count: wordViewModel.basicCount,
+                      percent: wordViewModel.currentPercent1,
+                      onTap: () {
+                        Get.to(() => QuizView(
+                              mode: ModeType.basic.toKo,
+                              level: ModeType.basic.toKo,
+                            ));
+                      },
+                    ),
+                    const SizedBox(height: 12),
+
+                    //수능
+                    ModeCard(
+                      mode: ModeType.koreaTest.toKo,
+                      count: wordViewModel.kTestCount,
+                      percent: wordViewModel.currentPercent2,
+                      onTap: () {
+                        Get.to(() => QuizView(
+                              mode: ModeType.koreaTest.toKo,
+                              level: ModeType.koreaTest.toKo,
+                            ));
+                      },
+                    ),
+                    const SizedBox(height: 12),
+
+                    //토익
+                    ModeCard(
+                      mode: ModeType.toeic.toKo,
+                      count: wordViewModel.toeicCount,
+                      percent: wordViewModel.currentPercent3,
+                      onTap: () {
+                        Get.to(() => QuizView(
+                              mode: ModeType.toeic.toKo,
+                              level: ModeType.toeic.toKo,
+                            ));
+                      },
+                    ),
+                  ],
+                )),
+          ),
+        );
   }
 
   AppBar appbar() {

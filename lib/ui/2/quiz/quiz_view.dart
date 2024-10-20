@@ -37,164 +37,168 @@ class QuizView extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: appbar(),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-        child: Obx(() {
-          if (quizViewModel.questions.isEmpty ||
-              quizViewModel.choices.isEmpty) {
-            return const Center(
-              child: Text(
-                '나만의 단어로 퀴즈를 풀어보세요',
-                style: TextStyle(
-                  fontSize: 21,
-                ),
+      body: body(),
+    );
+  }
+
+  Padding body() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+      child: Obx(() {
+        if (quizViewModel.questions.isEmpty ||
+            quizViewModel.choices.isEmpty) {
+          return const Center(
+            child: Text(
+              '나만의 단어로 퀴즈를 풀어보세요',
+              style: TextStyle(
+                fontSize: 21,
               ),
-            );
-          }
-          var currentWord =
-              quizViewModel.questions[quizViewModel.currentIndex.value];
-
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              //랜덤 20문제 문구
-              const Text(
-                '🔥랜덤 20문제🔥',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 10),
-
-              //단어 카드
-              QuizCard(
-                word: currentWord,
-              ),
-              const SizedBox(height: 12),
-
-              //보기 버튼 2개
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //보기 1번
-                  AnswerBtn(
-                    text: quizViewModel.choices[0],
-                    onTap: () {
-                      if (currentWord.kor == quizViewModel.choices[0] &&
-                          currentWord.eng == controller.text) {
-                        //정답
-                        quizViewModel.isCorrect.value = true;
-                        quizViewModel.databaseService
-                            .updateIsCorrectedWord(currentWord);
-                        wordViewModel.loadData();
-
-                        controller.clear();
-                        Timer(const Duration(milliseconds: 444), () {
-                          quizViewModel.isSame.value = false;
-                          quizViewModel.isCorrect.value = false;
-                          quizViewModel.nextQuestion(level, quizViewModel.count,
-                              quizViewModel.loadByTable(mode));
-                        });
-                      } else if (currentWord.kor != quizViewModel.choices[0] &&
-                          currentWord.eng == controller.text) {
-                        //오답
-                        quizViewModel.incorrectCount++;
-
-                        quizViewModel.databaseService
-                            .insertWrongWord(currentWord);
-                        wordViewModel.loadData();
-                        wordViewModel.setWrongCountByMode(mode);
-
-                        if (mode != ModeType.bomool.toKo) {
-                          quizViewModel.databaseService
-                              .deleteWord(currentWord.id);
-                        }
-                        controller.clear();
-                        quizViewModel.isIncorrect.value = true;
-                        Timer(
-                          const Duration(milliseconds: 444),
-                          () {
-                            quizViewModel.isIncorrect.value = false;
-                            quizViewModel.isSame.value = false;
-
-                            quizViewModel.nextQuestion(
-                                level,
-                                quizViewModel.count,
-                                quizViewModel.loadByTable(mode));
-                          },
-                        );
-                      }
-                    },
-                  ),
-                  const SizedBox(width: 5),
-
-                  //보기 2번
-                  AnswerBtn(
-                    text: quizViewModel.choices[1],
-                    onTap: () {
-                      if (currentWord.kor == quizViewModel.choices[1] &&
-                          currentWord.eng == controller.text) {
-                        //정답
-                        controller.clear();
-                        quizViewModel.isCorrect.value = true;
-                        quizViewModel.databaseService
-                            .updateIsCorrectedWord(currentWord);
-                        wordViewModel.loadData();
-                        Timer(
-                          const Duration(milliseconds: 444),
-                          () {
-                            quizViewModel.isCorrect.value = false;
-                            quizViewModel.isSame.value = false;
-                            quizViewModel.nextQuestion(
-                                level,
-                                quizViewModel.count,
-                                quizViewModel.loadByTable(mode));
-                          },
-                        );
-                      } else if (currentWord.kor != quizViewModel.choices[1] &&
-                          currentWord.eng == controller.text) {
-                        //오답
-                        quizViewModel.incorrectCount++;
-
-                        quizViewModel.databaseService
-                            .insertWrongWord(currentWord);
-                        wordViewModel.loadData();
-                        wordViewModel.setWrongCountByMode(mode);
-                        if (mode != ModeType.bomool.toKo) {
-                          quizViewModel.databaseService
-                              .deleteWord(currentWord.id);
-                        }
-                        controller.clear();
-                        quizViewModel.isIncorrect.value = true;
-                        Timer(
-                          const Duration(milliseconds: 444),
-                          () {
-                            quizViewModel.isIncorrect.value = false;
-                            quizViewModel.isSame.value = false;
-
-                            quizViewModel.nextQuestion(
-                                level,
-                                quizViewModel.count,
-                                quizViewModel.loadByTable(mode));
-                          },
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-
-              //텍스트 필드
-              AnswerField(
-                word: currentWord,
-                controller: controller,
-                focusNode: Get.find<QuizViewModel>().focusNode,
-              ),
-              const Spacer(),
-            ],
+            ),
           );
-        }),
-      ),
+        }
+        var currentWord =
+            quizViewModel.questions[quizViewModel.currentIndex.value];
+
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            //랜덤 20문제 문구
+            Text(
+              '🔥랜덤 ${quizViewModel.count}문제🔥',
+              style: const TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            //단어 카드
+            QuizCard(
+              word: currentWord,
+            ),
+            const SizedBox(height: 12),
+
+            //보기 버튼 2개
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //보기 1번
+                AnswerBtn(
+                  text: quizViewModel.choices[0],
+                  onTap: () {
+                    if (currentWord.kor == quizViewModel.choices[0] &&
+                        currentWord.eng == controller.text) {
+                      //정답
+                      quizViewModel.isCorrect.value = true;
+                      quizViewModel.databaseService
+                          .updateIsCorrectedWord(currentWord);
+                      wordViewModel.loadData();
+
+                      controller.clear();
+                      Timer(const Duration(milliseconds: 444), () {
+                        quizViewModel.isSame.value = false;
+                        quizViewModel.isCorrect.value = false;
+                        quizViewModel.nextQuestion(level, quizViewModel.count,
+                            quizViewModel.loadByTable(mode));
+                      });
+                    } else if (currentWord.kor != quizViewModel.choices[0] &&
+                        currentWord.eng == controller.text) {
+                      //오답
+                      quizViewModel.incorrectCount++;
+
+                      quizViewModel.databaseService
+                          .insertWrongWord(currentWord);
+                      wordViewModel.loadData();
+                      wordViewModel.setWrongCountByMode(mode);
+
+                      if (mode != ModeType.bomool.toKo) {
+                        quizViewModel.databaseService
+                            .deleteWord(currentWord.id);
+                      }
+                      controller.clear();
+                      quizViewModel.isIncorrect.value = true;
+                      Timer(
+                        const Duration(milliseconds: 444),
+                        () {
+                          quizViewModel.isIncorrect.value = false;
+                          quizViewModel.isSame.value = false;
+
+                          quizViewModel.nextQuestion(
+                              level,
+                              quizViewModel.count,
+                              quizViewModel.loadByTable(mode));
+                        },
+                      );
+                    }
+                  },
+                ),
+                const SizedBox(width: 5),
+
+                //보기 2번
+                AnswerBtn(
+                  text: quizViewModel.choices[1],
+                  onTap: () {
+                    if (currentWord.kor == quizViewModel.choices[1] &&
+                        currentWord.eng == controller.text) {
+                      //정답
+                      controller.clear();
+                      quizViewModel.isCorrect.value = true;
+                      quizViewModel.databaseService
+                          .updateIsCorrectedWord(currentWord);
+                      wordViewModel.loadData();
+                      Timer(
+                        const Duration(milliseconds: 444),
+                        () {
+                          quizViewModel.isCorrect.value = false;
+                          quizViewModel.isSame.value = false;
+                          quizViewModel.nextQuestion(
+                              level,
+                              quizViewModel.count,
+                              quizViewModel.loadByTable(mode));
+                        },
+                      );
+                    } else if (currentWord.kor != quizViewModel.choices[1] &&
+                        currentWord.eng == controller.text) {
+                      //오답
+                      quizViewModel.incorrectCount++;
+
+                      quizViewModel.databaseService
+                          .insertWrongWord(currentWord);
+                      wordViewModel.loadData();
+                      wordViewModel.setWrongCountByMode(mode);
+                      if (mode != ModeType.bomool.toKo) {
+                        quizViewModel.databaseService
+                            .deleteWord(currentWord.id);
+                      }
+                      controller.clear();
+                      quizViewModel.isIncorrect.value = true;
+                      Timer(
+                        const Duration(milliseconds: 444),
+                        () {
+                          quizViewModel.isIncorrect.value = false;
+                          quizViewModel.isSame.value = false;
+
+                          quizViewModel.nextQuestion(
+                              level,
+                              quizViewModel.count,
+                              quizViewModel.loadByTable(mode));
+                        },
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
+
+            //텍스트 필드
+            AnswerField(
+              word: currentWord,
+              controller: controller,
+              focusNode: Get.find<QuizViewModel>().focusNode,
+            ),
+            const Spacer(),
+          ],
+        );
+      }),
     );
   }
 

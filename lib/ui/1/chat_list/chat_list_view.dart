@@ -16,56 +16,81 @@ class ChatListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appbar(context),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-        child: Column(
-          children: [
-            //난이도
-            difficulty(),
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: Column(
+                children: [
+                  //난이도
+                  difficulty(),
 
-            //대화방 목록
-            list(),
+                  //대화방 목록
+                  list(),
 
-            //랜덤버튼
+                  //랜덤버튼
 
-            //배너광고?
-          ],
-        ),
+                  //배너광고?
+                ],
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Container(
+              color: Colors.green,
+              width: 320,
+              height: 50,
+            ),
+          )
+        ],
       ),
     );
   }
 
   Expanded list() {
-    return Expanded(child: Obx(() {
-      if (chatListViewModel.filterChats.isEmpty) {
-        return const Center(
-          child: Text('empty'),
-        );
-      }
-
-      return ListView.separated(
-        separatorBuilder: (context, index) => const Divider(),
-        itemCount: chatListViewModel.filterChats.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Center(
-            child: ListTile(
-              onTap: () {
-                final filterChat = chatListViewModel.filterChats[index];
-                Get.to(() => ChatView(
-                      chat: filterChat,
-                    ));
-              },
-              title:
-                  Text('✨  ${chatListViewModel.filterChats[index].situation}'),
-              titleTextStyle: TextStyle(
-                fontSize: 21,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
+    return Expanded(
+      child: Obx(
+        () {
+          if (chatListViewModel.filterChats.isEmpty) {
+            return const Center(
+              child: Text('empty'),
+            );
+          }
+          return ListView.separated(
+            separatorBuilder: (context, index) => const Divider(
+              thickness: 0.5,
             ),
+            itemCount: chatListViewModel.filterChats.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                onTap: () {
+                  final filterChat = chatListViewModel.filterChats[index];
+                  Get.to(() => ChatView(
+                        chat: filterChat,
+                      ));
+                },
+                leading: CircleAvatar(
+                  backgroundColor:
+                      Theme.of(context).colorScheme.primaryContainer,
+                  child: Text(
+                    'HS',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+                ),
+                title: Text(chatListViewModel.filterChats[index].situation),
+                titleTextStyle: TextStyle(
+                  fontSize: 21,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              );
+            },
           );
         },
-      );
-    }));
+      ),
+    );
   }
 
   Padding difficulty() {

@@ -26,68 +26,76 @@ class ChatView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 20),
-          child: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(
-              FeatherIcons.arrowLeft,
-              size: 32,
-            ),
-          ),
-        ),
-        centerTitle: true,
-        title: Text(
-          chat.situation,
-          style: const TextStyle(
-              fontWeight: FontWeight.w700, fontSize: 21, letterSpacing: 0),
-        ),
-      ),
+      appBar: appBar(context),
 
       //채팅창
-      body: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () {
-          Get.find<ChatViewModel>().focusNode.unfocus();
-        },
-        child: Obx(
-          () => Column(
-            children: [
-              Expanded(
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: ListView.separated(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    controller: Get.find<ChatViewModel>().scrollController,
-                    reverse: false,
-                    shrinkWrap: true,
-                    itemCount: Get.find<ChatViewModel>().currentChats.length,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(height: 10);
-                    },
-                    itemBuilder: (BuildContext context, int index) {
-                      final String engBubble =
-                          Get.find<ChatViewModel>().currentChats[index].content;
-                      final String korBubble = Get.find<ChatViewModel>()
-                          .currentChats[index]
-                          .translation;
-                    
-                      return Bubble(
-                        eng: engBubble,
-                        kor: korBubble,
-                        index: index,
-                      );
-                    },
-                  ),
+      body: body(),
+    );
+  }
+
+  GestureDetector body() {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        Get.find<ChatViewModel>().focusNode.unfocus();
+      },
+      child: Obx(
+        () => Column(
+          children: [
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ListView.separated(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  controller: Get.find<ChatViewModel>().scrollController,
+                  reverse: false,
+                  shrinkWrap: true,
+                  itemCount: Get.find<ChatViewModel>().currentChats.length,
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const SizedBox(height: 10);
+                  },
+                  itemBuilder: (BuildContext context, int index) {
+                    final String engBubble =
+                        Get.find<ChatViewModel>().currentChats[index].content;
+                    final String korBubble = Get.find<ChatViewModel>()
+                        .currentChats[index]
+                        .translation;
+                  
+                    return Bubble(
+                      eng: engBubble,
+                      kor: korBubble,
+                      index: index,
+                    );
+                  },
                 ),
               ),
-              const BottomInputField(),
-            ],
+            ),
+            const BottomInputField(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  AppBar appBar(BuildContext context) {
+    return AppBar(
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 20),
+        child: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(
+            FeatherIcons.arrowLeft,
+            size: 32,
           ),
         ),
+      ),
+      centerTitle: true,
+      title: Text(
+        chat.situation,
+        style: const TextStyle(
+            fontWeight: FontWeight.w700, fontSize: 21, letterSpacing: 0),
       ),
     );
   }
