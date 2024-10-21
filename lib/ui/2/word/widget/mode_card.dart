@@ -28,7 +28,7 @@ class ModeCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 110,
+        height: 100,
         padding: const EdgeInsets.fromLTRB(25, 5, 20, 5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
@@ -46,7 +46,7 @@ class ModeCard extends StatelessWidget {
                     mode,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 30,
+                      fontSize: 26,
                       color: Theme.of(context).colorScheme.onSecondaryContainer,
                     ),
                   ),

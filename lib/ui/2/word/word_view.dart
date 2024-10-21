@@ -70,7 +70,7 @@ class _WordViewState extends State<WordView> {
   Expanded wordList() {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
         child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(

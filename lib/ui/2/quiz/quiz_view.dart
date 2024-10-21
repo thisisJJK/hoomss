@@ -45,15 +45,9 @@ class QuizView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
       child: Obx(() {
-        if (quizViewModel.questions.isEmpty ||
-            quizViewModel.choices.isEmpty) {
+        if (quizViewModel.questions.isEmpty || quizViewModel.choices.isEmpty) {
           return const Center(
-            child: Text(
-              '나만의 단어로 퀴즈를 풀어보세요',
-              style: TextStyle(
-                fontSize: 21,
-              ),
-            ),
+            child: CircularProgressIndicator(),
           );
         }
         var currentWord =
@@ -122,9 +116,7 @@ class QuizView extends StatelessWidget {
                           quizViewModel.isIncorrect.value = false;
                           quizViewModel.isSame.value = false;
 
-                          quizViewModel.nextQuestion(
-                              level,
-                              quizViewModel.count,
+                          quizViewModel.nextQuestion(level, quizViewModel.count,
                               quizViewModel.loadByTable(mode));
                         },
                       );
@@ -150,9 +142,7 @@ class QuizView extends StatelessWidget {
                         () {
                           quizViewModel.isCorrect.value = false;
                           quizViewModel.isSame.value = false;
-                          quizViewModel.nextQuestion(
-                              level,
-                              quizViewModel.count,
+                          quizViewModel.nextQuestion(level, quizViewModel.count,
                               quizViewModel.loadByTable(mode));
                         },
                       );
@@ -177,9 +167,7 @@ class QuizView extends StatelessWidget {
                           quizViewModel.isIncorrect.value = false;
                           quizViewModel.isSame.value = false;
 
-                          quizViewModel.nextQuestion(
-                              level,
-                              quizViewModel.count,
+                          quizViewModel.nextQuestion(level, quizViewModel.count,
                               quizViewModel.loadByTable(mode));
                         },
                       );

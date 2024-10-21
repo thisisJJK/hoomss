@@ -16,7 +16,7 @@ class AnswerBtn extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.only(left: 5, right: 5),
-          width: 190,
+          width: 180,
           height: 85,
           decoration: BoxDecoration(
             border:

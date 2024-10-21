@@ -64,26 +64,28 @@ class AdHelper {
 //권한 동의에 따라 광고 요청
   void configureAdSettings(
       Function(BannerAd) onBannerLoaded, BannerType bannerType) async {
-    final trackingStatus =
-        await AppTrackingTransparency.trackingAuthorizationStatus;
+    if (Platform.isIOS) {
+      final trackingStatus =
+          await AppTrackingTransparency.trackingAuthorizationStatus;
 
-    if (trackingStatus == TrackingStatus.authorized) {
-      // 개인화된 광고 설정
-      MobileAds.instance.updateRequestConfiguration(
-        RequestConfiguration(
-          tagForChildDirectedTreatment:
-              TagForChildDirectedTreatment.unspecified,
-          maxAdContentRating: MaxAdContentRating.g,
-        ),
-      );
-    } else {
-      // 비개인화된 광고 설정
-      MobileAds.instance.updateRequestConfiguration(
-        RequestConfiguration(
-          tagForChildDirectedTreatment: TagForChildDirectedTreatment.no,
-          maxAdContentRating: MaxAdContentRating.g,
-        ),
-      );
+      if (trackingStatus == TrackingStatus.authorized) {
+        // 개인화된 광고 설정
+        MobileAds.instance.updateRequestConfiguration(
+          RequestConfiguration(
+            tagForChildDirectedTreatment:
+                TagForChildDirectedTreatment.unspecified,
+            maxAdContentRating: MaxAdContentRating.g,
+          ),
+        );
+      } else {
+        // 비개인화된 광고 설정
+        MobileAds.instance.updateRequestConfiguration(
+          RequestConfiguration(
+            tagForChildDirectedTreatment: TagForChildDirectedTreatment.no,
+            maxAdContentRating: MaxAdContentRating.g,
+          ),
+        );
+      }
     }
 
     // 광고 로드 및 표시 (예시로 배너 광고)

@@ -62,7 +62,7 @@ class _HomeViewState extends State<HomeView> {
         wordViewModel.percent(ModeType.koreaTest.toKo);
         wordViewModel.percent(ModeType.toeic.toKo);
 
-        Get.to(() => WordView());
+        Get.to(() => const WordView());
       },
       child: Container(
         width: 207,

@@ -165,7 +165,7 @@ class _ChatListViewState extends State<ChatListView> {
             padding: const EdgeInsets.only(right: 20),
             child: IconButton(
               onPressed: () {
-                Get.to(() => WordView());
+                Get.to(() => const WordView());
               },
               icon: const Icon(
                 FeatherIcons.book,
