@@ -14,7 +14,6 @@ class BomoolView extends StatelessWidget {
   BomoolView({super.key});
 
   final BomoolViewModel _bomoolViewModel = Get.put(BomoolViewModel());
-  final WordViewModel _wordViewModel = Get.put(WordViewModel());
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +29,7 @@ class BomoolView extends StatelessWidget {
       onPressed: () {
         Get.to(
           () => QuizView(
-            mode: ModeType.bomool.toKo,
-            level: ModeType.bomool.toKo,
+            mode: ModeType.bomool,
           ),
         );
       },
@@ -106,7 +104,7 @@ class BomoolView extends StatelessWidget {
         padding: const EdgeInsets.only(left: 20),
         child: IconButton(
           onPressed: () {
-            _wordViewModel.loadData();
+            Get.find<WordViewModel>().loadData();
             Get.back();
           },
           icon: const Icon(

@@ -17,16 +17,7 @@
         ]
       }
 ,
-{
-  "situation": "test",
-  "difficulty": "easy",
-  "conversations": [
-    {"content": "1", "translation": "안녕하세요, 택시가 필요해요.", "type": "sent"},
-    {"content": "2", "translation": "어디로 가시나요?", "type": "received"},
-    {"content": "3", "translation": "공항으로 가요.", "type": "sent"}
-   
-  ]
-},   {
+  {
   "situation": "길 묻기",
   "difficulty": "easy",
   "conversations": [

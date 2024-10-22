@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:hoomss/data/word/word_data_type.dart';
 import 'package:hoomss/data/word/word_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -17,6 +14,7 @@ class DatabaseService {
 //db 설정
   Future<bool> databaseConfig() async {
     try {
+      
       database = openDatabase(
         join(await getDatabasesPath(), 'hoomss_database.db'),
         onCreate: (db, version) async {
@@ -64,33 +62,12 @@ class DatabaseService {
 //초기 단어 데이터
   Future<bool> _insertInitData(Database db) async {
     try {
+     
       //word
-      Data data = Data();
-      data.wordData();
-      List<Map<String, dynamic>> basic = data.basic;
-      List<Map<String, dynamic>> kTest = data.kTest;
-      List<Map<String, dynamic>> toeic = data.toeic;
-
-      await db.transaction((t) async {
-        Batch batch = t.batch();
-        for (var word in basic) {
-          batch.insert('words', word);
-        }
-        for (var word in kTest) {
-          batch.insert('words', word);
-        }
-        for (var word in toeic) {
-          batch.insert('words', word);
-        }
-
-        await batch.commit(noResult: true);
-      });
-
-      // Batch batch = db.batch();
-      // for (var word in words) {
-      //   batch.insert('words', word);
-      // }
-      // await batch.commit(noResult: true);
+      List<WordModel> words = await parseWords();
+      for (var word in words) {
+        await db.insert('words', word.toMap());
+      }
 
       return true;
     } catch (err) {
@@ -193,7 +170,6 @@ class DatabaseService {
     final Database db = await database;
     final List<Map<String, dynamic>> data = await db.query('bomool');
 
-
     return List.generate(data.length, (i) {
       return WordModel(
           id: data[i]['id'],
@@ -234,7 +210,7 @@ class DatabaseService {
   Future<WordModel> readWrongWord(int id) async {
     final Database db = await database;
     final List<Map<String, dynamic>> data =
-        await db.query('bomool', where: 'id=?', whereArgs: [id]);
+        await db.query('wrong', where: 'id=?', whereArgs: [id]);
     return WordModel(
       id: data[0]['id'],
       eng: data[0]['eng'],
@@ -307,24 +283,5 @@ class DatabaseService {
     } catch (err) {
       return false;
     }
-  }
-
-  Future<List<WordModel>> getRandomWords(
-      String level, int count, String table) async {
-    final Database db = await database;
-
-    final List<Map<String, dynamic>> allWords = await databaseConfig()
-        .then((_) => db.query(table, where: 'level =?', whereArgs: [level]));
-
-    if (allWords.length < count) {
-      return allWords.map((map) => WordModel.fromMap(map)).toList();
-    }
-    List<Map<String, dynamic>> shuffledWords = List.from(allWords);
-    shuffledWords.shuffle(Random());
-
-    return shuffledWords
-        .take(count)
-        .map((map) => WordModel.fromMap(map))
-        .toList();
   }
 }

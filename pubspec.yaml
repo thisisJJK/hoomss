@@ -38,10 +38,10 @@ dependencies:
   flutter_feather_icons: 
   get: 
   auto_size_text: 
-  sqflite: 2.3.0
+  sqflite:
   path: 
   percent_indicator: 
-  google_mobile_ads: 2.4.0
+  google_mobile_ads: 
   app_tracking_transparency:
 
 dev_dependencies:

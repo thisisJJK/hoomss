@@ -54,7 +54,7 @@ class EditDialog extends StatelessWidget {
                                     id: snapshot.data!.id,
                                     eng: engController.text,
                                     kor: korController.text,
-                                    level: ModeType.bomool.toKo,
+                                    level: ModeType.bomool.name,
                                   ),
                                 )
                                 .then((result) {

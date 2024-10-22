@@ -6,7 +6,6 @@ import 'package:hoomss/data/word/word_data_type.dart';
 import 'package:hoomss/data/word/word_model.dart';
 import 'package:hoomss/ui/2/bomool_book/bomool_view_model.dart';
 import 'package:hoomss/ui/2/quiz/quiz_view_model.dart';
-import 'package:hoomss/ui/2/word/word_view_model.dart';
 
 class QuizCard extends StatelessWidget {
   final WordModel word;
@@ -62,7 +61,7 @@ class QuizCard extends StatelessWidget {
                     level: ModeType.bomool.toKo,
                   ),
                 );
-            Get.find<WordViewModel>().loadData();
+            // Get.find<WordViewModel>().loadData();
 
             Get.snackbar(
               '훔치기 성공!',

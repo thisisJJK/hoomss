@@ -9,6 +9,7 @@ import 'package:hoomss/ui/1/chat/chat_view.dart';
 import 'package:hoomss/ui/1/chat_list/chat_list_view_model.dart';
 import 'package:hoomss/ui/1/chat_list/widget/difficulty_btn.dart';
 import 'package:hoomss/ui/2/word/word_view.dart';
+import 'package:hoomss/ui/2/word/word_view_model.dart';
 
 class ChatListView extends StatefulWidget {
   const ChatListView({super.key});
@@ -165,7 +166,8 @@ class _ChatListViewState extends State<ChatListView> {
             padding: const EdgeInsets.only(right: 20),
             child: IconButton(
               onPressed: () {
-                Get.to(() => const WordView());
+                Get.find<WordViewModel>().loadData();
+                Get.to(() => WordView());
               },
               icon: const Icon(
                 FeatherIcons.book,

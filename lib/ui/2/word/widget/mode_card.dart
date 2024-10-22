@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoomss/data/word/word_data_type.dart';
-import 'package:hoomss/ui/2/word/word_view_model.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class ModeCard extends StatelessWidget {
-  final String mode;
+  final ModeType mode;
   final RxInt? count;
   final RxDouble? percent;
   final IconData? icon;
@@ -23,8 +22,7 @@ class ModeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isBomoolWrong =
-        mode == ModeType.bomool.toKo || mode == ModeType.wrong.toKo;
+    bool isBomoolWrong = mode == ModeType.bomool || mode == ModeType.wrong;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -37,66 +35,62 @@ class ModeCard extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Obx(() {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    mode,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 26,
-                      color: Theme.of(context).colorScheme.onSecondaryContainer,
-                    ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  mode.toKo,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 26,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
                   ),
-                  const Spacer(),
+                ),
+                const Spacer(),
 
-                  isBomoolWrong
-                      ? Text('${count!.value} 개')
-                      : Text(
-                          '남은단어 : $count',
+                isBomoolWrong
+                    ? Obx(() => Text('${count!.value} 개'))
+                    : Obx(
+                        () => Text(
+                          '남은단어 : ${count!.value}',
                           style: const TextStyle(
                             fontSize: 12,
                           ),
                         ),
+                      ),
 
-                  //진행률
-                  const SizedBox(width: 25),
+                //진행률
+                const SizedBox(width: 25),
 
-                  Icon(
-                    icon,
-                    size: 68,
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  ),
-                ],
-              );
-            }),
+                Icon(
+                  icon,
+                  size: 68,
+                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                ),
+              ],
+            ),
 
             //퍼센트 게이지
             if (!isBomoolWrong)
               Align(
-                alignment: Alignment.centerRight,
-                child: Obx(() {
-                  Get.find<WordViewModel>().percent(mode);
-                  double percent100 = percent! * 100;
-                  return CircularPercentIndicator(
-                    radius: 38,
-                    percent: percent!.value,
-                    lineWidth: 10,
-                    animation: true,
-                    center: Text('${percent100.toStringAsFixed(1)}%'),
-                    circularStrokeCap: CircularStrokeCap.round,
-                    progressColor: Theme.of(context).colorScheme.primary,
-                  );
-                }),
-              ),
+                  alignment: Alignment.centerRight,
+                  child: Obx(() {
+                    var percent100 = percent!.value * 100;
+
+                    return CircularPercentIndicator(
+                      radius: 38,
+                      percent: percent!.value,
+                      lineWidth: 10,
+                      animation: true,
+                      center: Text('${percent100.toStringAsFixed(1)}%'),
+                      circularStrokeCap: CircularStrokeCap.round,
+                      progressColor: Theme.of(context).colorScheme.primary,
+                    );
+                  })),
           ],
         ),
       ),
     );
   }
 }
-
-@override
-void initState(mode) {}

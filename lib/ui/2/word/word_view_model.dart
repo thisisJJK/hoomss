@@ -1,75 +1,134 @@
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:hoomss/admob/ad_helper.dart';
 import 'package:hoomss/data/database_service.dart';
 import 'package:hoomss/data/word/word_data_type.dart';
 import 'package:hoomss/data/word/word_model.dart';
 
 class WordViewModel extends GetxController {
+  var isAdReady = false.obs;
+  BannerAd? bannerAd;
+
+  @override
+  void onInit() {
+    adHelper().configureAdSettings(
+      (ad) => {
+        bannerAd = ad,
+        isAdReady.value = true,
+      },
+      BannerType.large,
+    );
+    super.onInit();
+  }
+
   final DatabaseService databaseService = Get.put(DatabaseService());
 
   Future<void> loadData() async {
-    Future<bool> isLoaded() async {
-      await readBasicWordTotalList();
-      await readKtestWordTotalList();
-      await readToeicWordTotalList();
-      await readBomoolWordList();
-      await readWrongWordList();
-      await readBasicWordList();
-      await readKtestWordList();
-      await readToeicWordList();
-      await readWrongListBybasic();
-      await readWrongListByKtest();
-      await readWrongListByToeic();
+    // if (totalBasicList.isEmpty) {
+    //   //전체
+    //   await readBasicWordTotalList();
 
-      return true;
-    }
+    //   await readKtestWordTotalList();
 
-    isLoaded().then((result) {
-      if (result) setCount();
-    });
+    //   await readToeicWordTotalList();
+    // }
+    //모드별
+    await readBomoolWordList();
+
+    await readWrongWordList();
+
+    await readBasicWordList();
+
+    await readKtestWordList();
+
+    await readToeicWordList();
+
+    //오답 모드별
+    await readWrongListBybasic();
+
+    await readWrongListByKtest();
+
+    await readWrongListByToeic();
+
+    //
+    setCount();
+
+    percent();
   }
 
 //기초, 수능, 토익 총 갯수
   int totalCount = 1000;
 
-  var totalBasicList = <WordModel>[].obs;
-  var totalKtestList = <WordModel>[].obs;
-  var totalToeicList = <WordModel>[].obs;
+  // var totalBasicList = <WordModel>[].obs;
+  // var totalKtestList = <WordModel>[].obs;
+  // var totalToeicList = <WordModel>[].obs;
 
-  Future<List<WordModel>> readBasicWordTotalList() async {
-    var allWords = await databaseService
-        .databaseConfig()
-        .then((_) => databaseService.readWords());
-    totalBasicList.value = allWords
-        .where((words) => words.level == ModeType.basic.toKo)
-        .map((words) => words)
-        .toList();
+//모드별 전체 단어 함수
+  // Future<List<WordModel>> readBasicWordTotalList() async {
+  //   final Database db = await databaseService.database;
+  //   List<Map<String, dynamic>> allBasicData =
+  //       await databaseService.databaseConfig().then(
+  //             (_) => db.query('words',
+  //                 where: 'level=?', whereArgs: [ModeType.basic.name]),
+  //           );
 
-    return totalBasicList;
-  }
+  //   List<WordModel> allBasicWords = List.generate(
+  //     allBasicData.length,
+  //     (i) => WordModel(
+  //       id: allBasicData[i]['id'],
+  //       eng: allBasicData[i]['eng'],
+  //       kor: allBasicData[i]['kor'],
+  //       level: allBasicData[i]['level'],
+  //     ),
+  //   );
+  //   totalBasicList.value = allBasicWords;
 
-  Future<List<WordModel>> readKtestWordTotalList() async {
-    var allWords = await databaseService
-        .databaseConfig()
-        .then((_) => databaseService.readWords());
-    totalKtestList.value = allWords
-        .where((words) => words.level == ModeType.koreaTest.toKo)
-        .map((words) => words)
-        .toList();
+  //   return totalBasicList;
+  // }
 
-    return totalKtestList;
-  }
+  // Future<List<WordModel>> readKtestWordTotalList() async {
+  //   final Database db = await databaseService.database;
+  //   List<Map<String, dynamic>> allBasicData =
+  //       await databaseService.databaseConfig().then(
+  //             (_) => db.query('words',
+  //                 where: 'level=?', whereArgs: [ModeType.koreaTest.name]),
+  //           );
 
-  Future<List<WordModel>> readToeicWordTotalList() async {
-    var allWords = await databaseService
-        .databaseConfig()
-        .then((_) => databaseService.readWords());
-    totalToeicList.value = allWords
-        .where((words) => words.level == ModeType.toeic.toKo)
-        .map((words) => words)
-        .toList();
+  //   List<WordModel> allKtestWords = List.generate(
+  //     allBasicData.length,
+  //     (i) => WordModel(
+  //       id: allBasicData[i]['id'],
+  //       eng: allBasicData[i]['eng'],
+  //       kor: allBasicData[i]['kor'],
+  //       level: allBasicData[i]['level'],
+  //     ),
+  //   );
+  //   totalKtestList.value = allKtestWords;
 
-    return totalToeicList;
-  }
+  //   return totalKtestList;
+  // }
+
+  // Future<List<WordModel>> readToeicWordTotalList() async {
+  //   final Database db = await databaseService.database;
+  //   List<Map<String, dynamic>> allBasicData =
+  //       await databaseService.databaseConfig().then(
+  //             (_) => db.query('words',
+  //                 where: 'level=?', whereArgs: [ModeType.toeic.name]),
+  //           );
+
+  //   List<WordModel> allToeicWords = List.generate(
+  //     allBasicData.length,
+  //     (i) => WordModel(
+  //       id: allBasicData[i]['id'],
+  //       eng: allBasicData[i]['eng'],
+  //       kor: allBasicData[i]['kor'],
+  //       level: allBasicData[i]['level'],
+  //     ),
+  //   );
+  //   totalToeicList.value = allToeicWords;
+
+  //   return totalToeicList;
+  // }
 
 //현재 남은 단어 리스트
   var wordBomoolList = <WordModel>[].obs;
@@ -109,57 +168,20 @@ class WordViewModel extends GetxController {
   var wrongCountByMode2 = 0.obs;
   var wrongCountByMode3 = 0.obs;
 
-  void setWrongCountByMode(mode) {
-    wrongCountBybasic.value = wrongListByBasic.length;
-    wrongCountByKtest.value = wrongListByKtest.length;
-    wrongCountByToeic.value = wrongListByToeic.length;
-    if (mode == ModeType.basic.toKo) wrongCountByMode1 = wrongCountBybasic;
-    if (mode == ModeType.koreaTest.toKo) wrongCountByMode2 = wrongCountByKtest;
-
-    if (mode == ModeType.toeic.toKo) wrongCountByMode3 = wrongCountByToeic;
-  }
-
-//mode card 카운트함수
-  var currentCount1 = 0.obs;
-  var currentCount2 = 0.obs;
-  var currentCount3 = 0.obs;
-
-  void currentCountByMode(mode) {
-    if (mode == ModeType.basic.toKo) {
-      currentCount1 = basicCount;
-    }
-    if (mode == ModeType.koreaTest.toKo) {
-      currentCount2 = kTestCount;
-    }
-    if (mode == ModeType.toeic.toKo) {
-      currentCount3 = toeicCount;
-    }
-  }
-
 //퍼센트
   var currentPercent1 = 0.0.obs;
   var currentPercent2 = 0.0.obs;
   var currentPercent3 = 0.0.obs;
-  void percent(mode) {
-    setWrongCountByMode(mode);
-    currentCountByMode(mode);
 
-    if (mode == ModeType.basic.toKo) {
-      currentPercent1.value =
-          (totalCount - currentCount1.value - wrongCountByMode1.value) /
-              totalCount;
-    }
-    if (mode == ModeType.koreaTest.toKo) {
-      currentPercent2.value =
-          (totalCount - currentCount2.value - wrongCountByMode2.value) /
-              totalCount;
-    }
+  void percent() {
+    currentPercent1.value =
+        (totalCount - basicCount.value - wrongListByBasic.length) / totalCount;
 
-    if (mode == ModeType.toeic.toKo) {
-      currentPercent3.value =
-          (totalCount - currentCount3.value - wrongCountByMode3.value) /
-              totalCount;
-    }
+    currentPercent2.value =
+        (totalCount - kTestCount.value - wrongListByKtest.length) / totalCount;
+
+    currentPercent3.value =
+        (totalCount - toeicCount.value - wrongListByToeic.length) / totalCount;
   }
 
 //모드별 현재 남은 단어 리스트
@@ -167,10 +189,7 @@ class WordViewModel extends GetxController {
     var allWords = await databaseService
         .databaseConfig()
         .then((_) => databaseService.readBomoolWords());
-    wordBomoolList.value = allWords
-        .where((words) => words.level == ModeType.bomool.toKo)
-        .map((words) => words)
-        .toList();
+    wordBomoolList.assignAll(allWords);
 
     return wordBomoolList;
   }
@@ -190,7 +209,7 @@ class WordViewModel extends GetxController {
         .then((_) => databaseService.readWords());
     wordBasicList.value = allWords
         .where(
-            (words) => words.level == ModeType.basic.toKo && words.correct == 0)
+            (words) => words.level == ModeType.basic.name && words.correct == 0)
         .map((words) => words)
         .toList();
 
@@ -203,7 +222,7 @@ class WordViewModel extends GetxController {
         .then((_) => databaseService.readWords());
     wordKtestList.value = allWords
         .where((words) =>
-            words.level == ModeType.koreaTest.toKo && words.correct == 0)
+            words.level == ModeType.koreaTest.name && words.correct == 0)
         .map((words) => words)
         .toList();
 
@@ -216,7 +235,7 @@ class WordViewModel extends GetxController {
         .then((_) => databaseService.readWords());
     wordToeicList.value = allWords
         .where(
-            (words) => words.level == ModeType.toeic.toKo && words.correct == 0)
+            (words) => words.level == ModeType.toeic.name && words.correct == 0)
         .map((words) => words)
         .toList();
 
@@ -229,9 +248,10 @@ class WordViewModel extends GetxController {
         .databaseConfig()
         .then((_) => databaseService.readWrongWords());
     wrongListByBasic.value = allWords
-        .where((words) => words.level == ModeType.basic.toKo)
-        .map((words) => words)
+        .where((word) => word.level == ModeType.basic.name)
+        .map((word) => word)
         .toList();
+
     return wrongListByBasic;
   }
 
@@ -240,9 +260,10 @@ class WordViewModel extends GetxController {
         .databaseConfig()
         .then((_) => databaseService.readWrongWords());
     wrongListByKtest.value = allWords
-        .where((words) => words.level == ModeType.koreaTest.toKo)
+        .where((words) => words.level == ModeType.koreaTest.name)
         .map((words) => words)
         .toList();
+
     return wrongListByKtest;
   }
 
@@ -251,7 +272,7 @@ class WordViewModel extends GetxController {
         .databaseConfig()
         .then((_) => databaseService.readWrongWords());
     wrongListByToeic.value = allWords
-        .where((words) => words.level == ModeType.toeic.toKo)
+        .where((words) => words.level == ModeType.toeic.name)
         .map((words) => words)
         .toList();
 

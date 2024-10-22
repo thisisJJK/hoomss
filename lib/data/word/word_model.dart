@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
+
 class WordModel {
   final int id;
   final String eng;
@@ -23,13 +27,14 @@ class WordModel {
     };
   }
 
-  factory WordModel.fromMap(Map<String, dynamic> map) {
+//json -> WordModel
+  factory WordModel.fromMap(Map<String, dynamic> map, int id, String level) {
     return WordModel(
-      id: map['id'],
+      id: id,
       eng: map['eng'],
       kor: map['kor'],
-      level: map['level'],
-      correct: map['correct'],
+      level: level,
+      correct: 0,
     );
   }
 
@@ -37,4 +42,22 @@ class WordModel {
   String toString() {
     return 'WordModel{id:$id, eng: $eng, kor: $kor, level: $level,correct:$correct}';
   }
+}
+
+Future<List<WordModel>> parseWords() async {
+  String jsonString = await rootBundle.loadString('assets/words.json');
+  Map<String, dynamic> jsonData = jsonDecode(jsonString);
+
+  List<WordModel> wordsList = [];
+  int idCount = 0;
+
+  jsonData.forEach(
+    (level, wordsListData) {
+      for (var wordData in wordsListData) {
+        wordsList.add(WordModel.fromMap(wordData, idCount++, level));
+      }
+    },
+  );
+
+  return wordsList;
 }

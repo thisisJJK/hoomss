@@ -23,13 +23,15 @@ class ChatListViewModel extends GetxController {
   Future<bool> loadChats() async {
     try {
       //chat
-      String jsonString = await rootBundle.loadString('assets/chat.json');
+      if (chats.isEmpty) {
+        String jsonString = await rootBundle.loadString('assets/chat.json');
 
-      Map<String, dynamic> jsonData = jsonDecode(jsonString);
+        Map<String, dynamic> jsonData = jsonDecode(jsonString);
 
-      List<dynamic> chatList = jsonData['chats'];
+        List<dynamic> chatList = jsonData['chats'];
 
-      chats.value = chatList.map((chat) => ChatModel.fromMap(chat)).toList();
+        chats.value = chatList.map((chat) => ChatModel.fromMap(chat)).toList();
+      }
 
       filterChatsByDifficulty(DifficultyType.easy);
 

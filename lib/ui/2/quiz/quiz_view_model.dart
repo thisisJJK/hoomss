@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hoomss/data/database_service.dart';
 import 'package:hoomss/data/word/word_data_type.dart';
 import 'package:hoomss/data/word/word_model.dart';
+import 'package:sqflite/sqflite.dart';
 
 class QuizViewModel extends GetxController {
   int count = 20; // 문제 갯수
@@ -13,6 +14,8 @@ class QuizViewModel extends GetxController {
 
   late final FocusNode focusNode = FocusNode();
 
+  var totalWords = <WordModel>[].obs;
+  var initWords = <Map<String, dynamic>>[].obs;
   var questions = <WordModel>[].obs;
   var currentIndex = 0.obs;
   var isCorrect = false.obs;
@@ -29,27 +32,29 @@ class QuizViewModel extends GetxController {
     super.onClose();
   }
 
-  String loadByTable(String mode) {
-    String table;
+  TableType loadByTable(ModeType mode) {
+    TableType table;
 
     if (!isLoaded.value) {
-      if (mode == ModeType.bomool.toKo) {
-        table = 'bomool';
-      } else if (mode == ModeType.wrong.toKo) {
-        table = 'wrong';
+      if (mode == ModeType.bomool) {
+        table = TableType.bomool;
+      } else if (mode == ModeType.wrong) {
+        table = TableType.wrong;
       } else {
-        table = 'words';
+        table = TableType.words;
       }
       isLoaded.value = true;
       return table;
+    } else {
+      return TableType.words;
     }
-    return '';
   }
 
-  Future<void> loadRandomWords(String mode, int count, String table) async {
+  Future<void> loadRandomWords(
+      ModeType mode, int count, TableType table) async {
     var randomWords = await databaseService
         .databaseConfig()
-        .then((_) => databaseService.getRandomWords(mode, count, table));
+        .then((_) => _getRandomWords(mode.name, count, table));
 
     if (count <= randomWords.length) {
       for (int i = 0; i < count; i++) {
@@ -66,14 +71,54 @@ class QuizViewModel extends GetxController {
     }
   }
 
+  Future<List<WordModel>> _getRandomWords(
+      String level, int count, TableType table) async {
+    final Database db = await databaseService.database;
+    if (initWords.isEmpty) {
+      List<Map<String, dynamic>> allWords =
+          await databaseService.databaseConfig().then(
+                (_) => db.query(
+                  table.name,
+                  where: 'level =?',
+                  whereArgs: [level],
+                ),
+              );
+      initWords.addAll(allWords);
+      if (initWords.length < count) {
+        return initWords
+            .map(
+              (map) => WordModel.fromMap(
+                map,
+                map['id'],
+                level,
+              ),
+            )
+            .toList();
+      }
+    }
+    List<Map<String, dynamic>> shuffledWords = List.from(initWords);
+    shuffledWords.shuffle(Random());
+
+    return shuffledWords
+        .take(count)
+        .map((map) => WordModel.fromMap(map, map['id'], level))
+        .toList();
+  }
+
+  
+
   Future<void> setChoices() async {
-    var allWords = await databaseService
-        .databaseConfig()
-        .then((_) => databaseService.readWords());
+    if (totalWords.isEmpty) {
+      var allWords = await databaseService
+          .databaseConfig()
+          .then((_) => databaseService.readWords());
+
+      totalWords.addAll(allWords);
+    }
     if (questions.isEmpty) return;
 
     final correctAns = questions[currentIndex.value].kor;
-    final incorrectAns = allWords
+    final incorrectAns = totalWords
         .where((words) => words.kor != correctAns)
         .map((words) => words.kor)
         .toList();
@@ -85,7 +130,7 @@ class QuizViewModel extends GetxController {
     choices.shuffle(Random());
   }
 
-  void nextQuestion(String mode, int count, String table) {
+  void nextQuestion(ModeType mode, int count, TableType table) {
     if (currentIndex.value == questions.length - 1) {
       return oneMoreDialog(mode, count, table);
     }
@@ -96,7 +141,7 @@ class QuizViewModel extends GetxController {
     setChoices();
   }
 
-  void oneMoreDialog(String mode, int count, String table) {
+  void oneMoreDialog(ModeType mode, int count, TableType table) {
     Get.dialog(
       AlertDialog(
         title: const Text("한번 더 훔쳐볼래?"),

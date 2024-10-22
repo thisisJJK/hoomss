@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hoomss/common/widget/hoomss_title.dart';
 import 'package:hoomss/data/database_service.dart';
-import 'package:hoomss/data/word/word_data_type.dart';
 import 'package:hoomss/ui/1/chat_list/chat_list_view.dart';
 import 'package:hoomss/ui/2/word/word_view.dart';
 import 'package:hoomss/ui/2/word/word_view_model.dart';
@@ -58,11 +57,7 @@ class _HomeViewState extends State<HomeView> {
     return GestureDetector(
       onTap: () {
         wordViewModel.loadData();
-        wordViewModel.percent(ModeType.basic.toKo);
-        wordViewModel.percent(ModeType.koreaTest.toKo);
-        wordViewModel.percent(ModeType.toeic.toKo);
-
-        Get.to(() => const WordView());
+        Get.to(() => WordView());
       },
       child: Container(
         width: 207,

@@ -11,7 +11,6 @@ class WrongView extends StatelessWidget {
   WrongView({super.key});
 
   final WrongViewModel _wrongViewModel = Get.put(WrongViewModel());
-  final WordViewModel _wordViewModel = Get.put(WordViewModel());
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +74,7 @@ class WrongView extends StatelessWidget {
         padding: const EdgeInsets.only(left: 20),
         child: IconButton(
           onPressed: () {
-            _wordViewModel.loadData();
+            Get.find<WordViewModel>().loadData();
             Get.back();
           },
           icon: const Icon(

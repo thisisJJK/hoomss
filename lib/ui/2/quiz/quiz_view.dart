@@ -4,28 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:hoomss/data/word/word_data_type.dart';
-import 'package:hoomss/ui/2/bomool_book/bomool_view_model.dart';
 import 'package:hoomss/ui/2/quiz/quiz_view_model.dart';
 import 'package:hoomss/ui/2/quiz/widget/answer_btn.dart';
 import 'package:hoomss/ui/2/quiz/widget/answer_field.dart';
 import 'package:hoomss/ui/2/quiz/widget/quiz_card.dart';
 import 'package:hoomss/ui/2/word/word_view_model.dart';
-import 'package:hoomss/ui/2/wrong_book/wrong_view_model.dart';
 
 class QuizView extends StatelessWidget {
-  final String level;
-  final String mode;
+  final ModeType mode;
 
   QuizView({
     super.key,
     required this.mode,
-    required this.level,
   });
 
   final QuizViewModel quizViewModel = Get.put(QuizViewModel());
-  final BomoolViewModel bomoolViewModel = Get.put(BomoolViewModel());
-  final WrongViewModel wrongViewModel = Get.put(WrongViewModel());
-  final WordViewModel wordViewModel = Get.put(WordViewModel());
 
   final TextEditingController controller = TextEditingController();
 
@@ -85,13 +78,13 @@ class QuizView extends StatelessWidget {
                       quizViewModel.isCorrect.value = true;
                       quizViewModel.databaseService
                           .updateIsCorrectedWord(currentWord);
-                      wordViewModel.loadData();
+
 
                       controller.clear();
                       Timer(const Duration(milliseconds: 444), () {
                         quizViewModel.isSame.value = false;
                         quizViewModel.isCorrect.value = false;
-                        quizViewModel.nextQuestion(level, quizViewModel.count,
+                        quizViewModel.nextQuestion(mode, quizViewModel.count,
                             quizViewModel.loadByTable(mode));
                       });
                     } else if (currentWord.kor != quizViewModel.choices[0] &&
@@ -101,10 +94,9 @@ class QuizView extends StatelessWidget {
 
                       quizViewModel.databaseService
                           .insertWrongWord(currentWord);
-                      wordViewModel.loadData();
-                      wordViewModel.setWrongCountByMode(mode);
 
-                      if (mode != ModeType.bomool.toKo) {
+
+                      if (mode != ModeType.bomool) {
                         quizViewModel.databaseService
                             .deleteWord(currentWord.id);
                       }
@@ -116,7 +108,7 @@ class QuizView extends StatelessWidget {
                           quizViewModel.isIncorrect.value = false;
                           quizViewModel.isSame.value = false;
 
-                          quizViewModel.nextQuestion(level, quizViewModel.count,
+                          quizViewModel.nextQuestion(mode, quizViewModel.count,
                               quizViewModel.loadByTable(mode));
                         },
                       );
@@ -136,13 +128,13 @@ class QuizView extends StatelessWidget {
                       quizViewModel.isCorrect.value = true;
                       quizViewModel.databaseService
                           .updateIsCorrectedWord(currentWord);
-                      wordViewModel.loadData();
+
                       Timer(
                         const Duration(milliseconds: 444),
                         () {
                           quizViewModel.isCorrect.value = false;
                           quizViewModel.isSame.value = false;
-                          quizViewModel.nextQuestion(level, quizViewModel.count,
+                          quizViewModel.nextQuestion(mode, quizViewModel.count,
                               quizViewModel.loadByTable(mode));
                         },
                       );
@@ -153,9 +145,9 @@ class QuizView extends StatelessWidget {
 
                       quizViewModel.databaseService
                           .insertWrongWord(currentWord);
-                      wordViewModel.loadData();
-                      wordViewModel.setWrongCountByMode(mode);
-                      if (mode != ModeType.bomool.toKo) {
+
+
+                      if (mode != ModeType.bomool) {
                         quizViewModel.databaseService
                             .deleteWord(currentWord.id);
                       }
@@ -167,7 +159,7 @@ class QuizView extends StatelessWidget {
                           quizViewModel.isIncorrect.value = false;
                           quizViewModel.isSame.value = false;
 
-                          quizViewModel.nextQuestion(level, quizViewModel.count,
+                          quizViewModel.nextQuestion(mode, quizViewModel.count,
                               quizViewModel.loadByTable(mode));
                         },
                       );
@@ -198,7 +190,7 @@ class QuizView extends StatelessWidget {
           const Icon(FeatherIcons.book),
           const SizedBox(width: 3),
           Text(
-            mode,
+            mode.toKo,
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -210,6 +202,7 @@ class QuizView extends StatelessWidget {
         padding: const EdgeInsets.only(left: 20),
         child: IconButton(
             onPressed: () {
+              Get.find<WordViewModel>().loadData();
               Get.back();
             },
             icon: const Icon(

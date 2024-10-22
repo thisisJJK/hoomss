@@ -64,7 +64,7 @@ class AddDialog extends StatelessWidget {
                             id: id,
                             eng: engController.text,
                             kor: korController.text,
-                            level: ModeType.bomool.toKo,
+                            level: ModeType.bomool.name,
                           ))
                           .then((result) {
                         if (result) {
