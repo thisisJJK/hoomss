@@ -50,31 +50,37 @@ class QuizViewModel extends GetxController {
     }
   }
 
-  Future<void> loadRandomWords(
+  Future<bool> loadRandomWords(
       ModeType mode, int count, TableType table) async {
-    var randomWords = await databaseService
-        .databaseConfig()
-        .then((_) => _getRandomWords(mode.name, count, table));
+    try {
+      var randomWords = await databaseService
+          .databaseConfig()
+          .then((_) => _getRandomWords(mode.name, count, table));
 
-    if (count <= randomWords.length) {
-      for (int i = 0; i < count; i++) {
-        questions.insert(i, randomWords[i]);
+      if (count <= randomWords.length) {
+        for (int i = 0; i < count; i++) {
+          questions.insert(i, randomWords[i]);
+        }
+        currentIndex.value = 0;
+        await setChoices();
+      } else {
+        for (int i = 0; i < randomWords.length; i++) {
+          questions.insert(i, randomWords[i]);
+        }
+        currentIndex.value = 0;
+        await setChoices();
       }
-      currentIndex.value = 0;
-      await setChoices();
-    } else {
-      for (int i = 0; i < randomWords.length; i++) {
-        questions.insert(i, randomWords[i]);
-      }
-      currentIndex.value = 0;
-      await setChoices();
+
+      return true;
+    } catch (err) {
+      return false;
     }
   }
 
   Future<List<WordModel>> _getRandomWords(
       String level, int count, TableType table) async {
     final Database db = await databaseService.database;
-    if (initWords.isEmpty) {
+    if (table.name != 'wrong') {
       List<Map<String, dynamic>> allWords =
           await databaseService.databaseConfig().then(
                 (_) => db.query(
@@ -96,6 +102,26 @@ class QuizViewModel extends GetxController {
             .toList();
       }
     }
+    if (table.name == 'wrong') {
+      List<WordModel> words = await databaseService
+          .databaseConfig()
+          .then((_) => databaseService.readWrongWords());
+
+      initWords.assignAll(words.map((map) => map.toMap()).toList());
+
+      if (initWords.length < count) {
+        return initWords
+            .map(
+              (map) => WordModel.fromMap(
+                map,
+                map['id'],
+                level,
+              ),
+            )
+            .toList();
+      }
+    }
+
     List<Map<String, dynamic>> shuffledWords = List.from(initWords);
     shuffledWords.shuffle(Random());
 
@@ -104,8 +130,6 @@ class QuizViewModel extends GetxController {
         .map((map) => WordModel.fromMap(map, map['id'], level))
         .toList();
   }
-
-  
 
   Future<void> setChoices() async {
     if (totalWords.isEmpty) {

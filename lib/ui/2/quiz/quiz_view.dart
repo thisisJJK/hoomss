@@ -24,9 +24,6 @@ class QuizView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    quizViewModel.loadRandomWords(
-        mode, quizViewModel.count, quizViewModel.loadByTable(mode));
-
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: appbar(),
@@ -35,12 +32,34 @@ class QuizView extends StatelessWidget {
   }
 
   Padding body() {
+    TableType table = quizViewModel.loadByTable(mode);
+    Timer(const Duration(milliseconds: 777), () async {
+      await quizViewModel.loadRandomWords(mode, quizViewModel.count, table);
+    });
+
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
       child: Obx(() {
         if (quizViewModel.questions.isEmpty || quizViewModel.choices.isEmpty) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(
+                  strokeWidth: 5,
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                Text(
+                  '흐흐.. 단어 훔쳐올게',
+                  style: TextStyle(
+                    fontSize: 21,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           );
         }
         var currentWord =
@@ -79,7 +98,6 @@ class QuizView extends StatelessWidget {
                       quizViewModel.databaseService
                           .updateIsCorrectedWord(currentWord);
 
-
                       controller.clear();
                       Timer(const Duration(milliseconds: 444), () {
                         quizViewModel.isSame.value = false;
@@ -94,7 +112,6 @@ class QuizView extends StatelessWidget {
 
                       quizViewModel.databaseService
                           .insertWrongWord(currentWord);
-
 
                       if (mode != ModeType.bomool) {
                         quizViewModel.databaseService
@@ -145,7 +162,6 @@ class QuizView extends StatelessWidget {
 
                       quizViewModel.databaseService
                           .insertWrongWord(currentWord);
-
 
                       if (mode != ModeType.bomool) {
                         quizViewModel.databaseService

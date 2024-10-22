@@ -3,6 +3,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:hoomss/data/word/word_data_type.dart';
 import 'package:hoomss/data/word/word_model.dart';
+import 'package:hoomss/ui/2/quiz/quiz_view.dart';
 import 'package:hoomss/ui/2/word/word_view_model.dart';
 import 'package:hoomss/ui/2/wrong_book/widget/word_card.dart';
 import 'package:hoomss/ui/2/wrong_book/wrong_view_model.dart';
@@ -17,6 +18,17 @@ class WrongView extends StatelessWidget {
     return Scaffold(
       appBar: appbar(context),
       body: body(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (_wrongViewModel.wordList.isEmpty) return;
+          Get.to(
+            () => QuizView(
+              mode: ModeType.wrong,
+            ),
+          );
+        },
+        child: const Icon(FeatherIcons.play),
+      ),
     );
   }
 

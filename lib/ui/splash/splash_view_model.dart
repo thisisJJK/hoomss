@@ -19,7 +19,7 @@ class SplashViewModel extends GetxController {
 Future<bool> _loadData() async {
   try {
     await Future.delayed(
-      const Duration(seconds: 2),
+      const Duration(milliseconds: 1111),
     );
 
     Get.off(

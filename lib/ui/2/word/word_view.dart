@@ -106,9 +106,11 @@ class WordView extends StatelessWidget {
                   count: wordViewModel.toeicCount,
                   percent: wordViewModel.currentPercent3,
                   onTap: () {
-                    Get.to(() => QuizView(
-                          mode: ModeType.toeic,
-                        ));
+                    Get.to(
+                      () => QuizView(
+                        mode: ModeType.toeic,
+                      ),
+                    );
                   },
                 ),
               ],

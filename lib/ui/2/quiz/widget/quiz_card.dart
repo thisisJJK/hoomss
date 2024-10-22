@@ -10,11 +10,11 @@ import 'package:hoomss/ui/2/quiz/quiz_view_model.dart';
 class QuizCard extends StatelessWidget {
   final WordModel word;
 
-  const QuizCard({
+  QuizCard({
     super.key,
     required this.word,
   });
-
+  final BomoolViewModel _bomoolViewModel = Get.put(BomoolViewModel());
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -47,7 +47,7 @@ class QuizCard extends StatelessWidget {
         child: GestureDetector(
           //즐겨찾기 -> 보물 단어장
           onTap: () {
-            var wordList = Get.find<BomoolViewModel>().wordList;
+            var wordList = _bomoolViewModel.wordList;
             int id = 1;
             if (wordList.isNotEmpty) {
               id = wordList.last.id + 1;

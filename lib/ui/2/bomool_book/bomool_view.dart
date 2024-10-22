@@ -27,6 +27,8 @@ class BomoolView extends StatelessWidget {
   FloatingActionButton floatinActionBtn() {
     return FloatingActionButton(
       onPressed: () {
+        if (_bomoolViewModel.wordList.isEmpty) return;
+
         Get.to(
           () => QuizView(
             mode: ModeType.bomool,
@@ -46,7 +48,7 @@ class BomoolView extends StatelessWidget {
       } else if (_bomoolViewModel.wordList.isEmpty) {
         return const Center(
           child: Text(
-            '나만의 단어를 추가해보세요',
+            '💎 나만의 단어를 추가해보세요 💎',
             style: TextStyle(fontSize: 21),
           ),
         );

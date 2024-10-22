@@ -87,7 +87,7 @@ class _ChatListViewState extends State<ChatListView> {
         () {
           if (chatListViewModel.filterChats.isEmpty) {
             return const Center(
-              child: Text('empty'),
+              child: CircularProgressIndicator(),
             );
           }
           return ListView.separated(
