@@ -30,7 +30,7 @@ class DifficultyBtn extends StatelessWidget {
               : Theme.of(context).colorScheme.secondaryContainer,
           borderRadius: BorderRadius.circular(15),
         ),
-        width: 120,
+        width: (MediaQuery.of(context).size.width / 3) - 20,
         height: 50,
         child: Center(
           child: Text(

@@ -27,7 +27,7 @@ class ModeCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 100,
-        padding: const EdgeInsets.fromLTRB(25, 5, 20, 5),
+        padding: const EdgeInsets.fromLTRB(20, 5, 10, 5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           color: Theme.of(context).colorScheme.secondaryContainer,
@@ -43,14 +43,19 @@ class ModeCard extends StatelessWidget {
                   mode.toKo,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 26,
+                    fontSize: 25,
                     color: Theme.of(context).colorScheme.onSecondaryContainer,
                   ),
                 ),
                 const Spacer(),
 
                 isBomoolWrong
-                    ? Obx(() => Text('${count!.value} 개'))
+                    ? Obx(() => Text(
+                          '현재단어 : ${count!.value}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                          ),
+                        ))
                     : Obx(
                         () => Text(
                           '남은단어 : ${count!.value}',
@@ -59,9 +64,10 @@ class ModeCard extends StatelessWidget {
                           ),
                         ),
                       ),
-
+                const SizedBox(
+                  width: 15,
+                ),
                 //진행률
-                const SizedBox(width: 25),
 
                 Icon(
                   icon,
@@ -79,7 +85,7 @@ class ModeCard extends StatelessWidget {
                     var percent100 = percent!.value * 100;
 
                     return CircularPercentIndicator(
-                      radius: 38,
+                      radius: 37,
                       percent: percent!.value,
                       lineWidth: 10,
                       animation: true,

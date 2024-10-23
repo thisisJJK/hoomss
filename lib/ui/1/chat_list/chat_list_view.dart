@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
@@ -113,10 +114,14 @@ class _ChatListViewState extends State<ChatListView> {
                     ),
                   ),
                 ),
-                title: Text(chatListViewModel.filterChats[index].situation),
-                titleTextStyle: TextStyle(
-                  fontSize: 21,
-                  color: Theme.of(context).colorScheme.onSurface,
+                title: AutoSizeText(
+                  chatListViewModel.filterChats[index].situation,
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
               );
             },

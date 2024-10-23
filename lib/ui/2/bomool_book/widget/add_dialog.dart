@@ -41,7 +41,7 @@ class AddDialog extends StatelessWidget {
               height: 25,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 //추가버튼
                 ElevatedButton(

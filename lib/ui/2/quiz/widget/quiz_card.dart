@@ -20,7 +20,7 @@ class QuizCard extends StatelessWidget {
     return Stack(children: [
       Obx(
         () => Container(
-          height: 250,
+          height: MediaQuery.of(context).size.height * 0.234,
           width: double.infinity,
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(

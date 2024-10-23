@@ -16,8 +16,8 @@ class AnswerBtn extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.only(left: 5, right: 5),
-          width: 180,
-          height: 85,
+          width: MediaQuery.of(context).size.width * 0.5 - 25,
+          height: MediaQuery.of(context).size.height * 0.085,
           decoration: BoxDecoration(
             border:
                 isSame.value ? Border.all() : Border.all(color: Colors.black26),
@@ -30,7 +30,7 @@ class AnswerBtn extends StatelessWidget {
               minFontSize: 12,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 22,
                 color: isSame.value
                     ? Theme.of(context).colorScheme.onSurface
                     : Colors.transparent,

@@ -14,7 +14,6 @@ class DatabaseService {
 //db 설정
   Future<bool> databaseConfig() async {
     try {
-      
       database = openDatabase(
         join(await getDatabasesPath(), 'hoomss_database.db'),
         onCreate: (db, version) async {
@@ -62,7 +61,6 @@ class DatabaseService {
 //초기 단어 데이터
   Future<bool> _insertInitData(Database db) async {
     try {
-     
       //word
       List<WordModel> words = await parseWords();
       for (var word in words) {

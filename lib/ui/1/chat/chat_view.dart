@@ -60,7 +60,7 @@ class ChatView extends StatelessWidget {
                     final String korBubble = Get.find<ChatViewModel>()
                         .currentChats[index]
                         .translation;
-                  
+
                     return Bubble(
                       eng: engBubble,
                       kor: korBubble,
@@ -169,11 +169,13 @@ class BottomInputField extends StatelessWidget {
                         .currentChats[
                             Get.find<ChatViewModel>().currentIndex.value]
                         .content
-                        .toLowerCase() ==
+                        .toLowerCase()
+                        .replaceAll("'", '’') ==
                     Get.find<ChatViewModel>()
                         .textEditingController
                         .text
-                        .toLowerCase()) {
+                        .toLowerCase()
+                        .replaceAll("'", '’')) {
                   Get.find<ChatViewModel>().onSubmitted(
                       Get.find<ChatViewModel>().textEditingController.text);
 
